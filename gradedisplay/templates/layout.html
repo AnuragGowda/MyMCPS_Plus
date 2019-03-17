@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+        <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+        {% if title %}
+            <title>MyMCPS++ - {{ title }}</title>
+        {% else %}
+            <title>MyMCPS++</title>
+        {% endif %}
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+            <a class="navbar-brand" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                <img src="https://image.flaticon.com/icons/svg/1584/1584563.svg" width="40" height="40" alt="">
+            </a>
+            <a class="navbar-brand" href="{{url_for('getInfo')}}">MyMCPS++</a>  
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item" id='grades-color'>
+                        <a class="nav-link" href="{{url_for('grades')}}" id='grades-btn'>&nbsp;&nbsp;&nbsp;<i class="fas fa-bookmark"></i>&nbsp;Grades<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item" id='about-color'>
+                        <a class="nav-link navbar-right" href="{{url_for('about')}}" id='about-btn'>&nbsp;&nbsp;&nbsp;<i class="fas fa-info-circle"></i>&nbsp;About</a>
+                    </li>
+                    <li class="nav-item" id='contact-color'>
+                        <a class="nav-link navbar-right" href="{{url_for('contact')}}" id='contact-btn'>&nbsp;&nbsp;&nbsp;<i class="fas fa-file-signature"></i>&nbsp;Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    {% if session['login'] %}
+                        <li class="nav-item">
+                            <a href="{{url_for('logout')}}"><button type="button" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</button></a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+        {% block content %}{% endblock %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="col-md-4 offset-md-4">
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="{{ url_for('static', filename='main.js') }}"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+</html>

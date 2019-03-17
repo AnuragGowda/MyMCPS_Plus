@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="col-md-8 offset-md-2 grade-info table-responsive">
+    <table class="table">
+        <thead>
+            <th><h1>{{ info[0] }}</h1></th>
+            {% if info[1] == 'A' %}
+                <th><button type="button" class="btn btn-lg btn-success" >A - {{ info[2] }}% </button></th>
+            {% elif info[1] == 'B' %}
+                <th><button type="button" class="btn btn-lg btn-info">B - {{ info[2] }}% </button></th>
+            {% elif info[1] == 'C' %}
+                <th><button type="button" class="btn btn-lg btn-primary">C - {{ info[2] }}% </button></th>
+            {% elif info[1] == 'D' %}
+                <th><button type="button" class="btn btn-lg btn-warning">D - {{ info[2] }}% </button></th>
+            {% else %}
+                <th><button type="button" class="btn btn-lg btn-danger">E - {{ info[2] }}% </button></th>
+            {% endif %}
+        </thead>
+    </table>
+</div>
+<div class="col-md-8 offset-md-2 grade-header table-striped">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Category</th>
+                <th scope="col">Points</th>
+                <th scope="col">Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for headers in data[0] %}
+                {% if headers %}
+                <tr>
+                    <td class='header'>{{ headers['Description'] }}</td>
+                    <td class='headerInfo'>{{ headers['PointsEarned'] }}/{{ headers['PointsPossible'] }}</td>
+                    {% if headers['CategoryGrade'] == 'A' %}
+                        <td><button type="button" class="btn btn-success">{{ headers['CategoryGrade'] }} - {{ headers['Percent'] }}% </button></td>
+                    {% elif headers['CategoryGrade'] == 'B' %}
+                        <td><button type="button" class="btn btn-info">{{ headers['CategoryGrade'] }} - {{ headers['Percent'] }}% </button></td>
+                    {% elif headers['CategoryGrade'] == 'C' %}
+                        <td><button type="button" class="btn btn-primary">{{ headers['CategoryGrade'] }} - {{ headers['Percent'] }}% </button></td>
+                    {% elif headers['CategoryGrade'] == 'D' %}
+                        <td><button type="button" class="btn btn-warning">{{ headers['CategoryGrade'] }} - {{ headers['Percent'] }}% </button></td>
+                    {% elif headers['CategoryGrade'] == 'E' %}
+                        <td><button type="button" class="btn btn-danger">{{ headers['CategoryGrade'] }} - {{ headers['Percent'] }}% </button></td>
+                    {% else %}
+                        <td><button type="button" class="btn btn-secondary">{{ headers['CategoryGrade'] }} - {{ headers['Percent'] }}% </button></td>
+                    {% endif %}
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="col-md-4 offset-md-7">
+        <strong>Change Grades:&nbsp;&nbsp;&nbsp;</strong>
+        <button type="button" class="btn btn-primary" id='editGrades'>Edit Grades</button>
+    </div>
+    <div class="col-md-6 offset-md-6">
+        <strong><i>Unentered grades and grades that are an X or Z will be marked as 0s, you may remove these grades if you choose</i></strong>
+    </div>
+</div>
+<div class="col-md-8 offset-md-2 grades table-striped table-responsive">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th class = "gradeHeader" scope="col">Due Date</th>
+                <th scope="col">Category</th>
+                <th scope="col">Assignment</th>
+                <th scope="col">Points</th>
+                <th scope="col">Grade</th>
+            </tr>
+        </thead>
+        <tbody id ='gradeTable'>
+            {% for grades in data[1] %}
+                {% if grades %}
+                <tr>
+                    <td class="date">{{ grades['DueDate'][0:-11] }}</td>
+                    <td class="type">{{ grades['AssignmentType'] }}</td>
+                    <td>{{ grades['Description'] }}</td>
+                    <td class="grade">{{ grades['Points'] }}/{{ grades['Possible'] }}</td>
+                    {% if grades['Grade'] == 'A' %}
+                        <td><button type="button" class="btn btn-success gradeLetter">{{ grades['Grade'] }} - {{(grades['Points']|int/grades['Possible']|int*100)|round(1)}}%</button></td>
+                    {% elif grades['Grade'] == 'B' %}
+                        <td><button type="button" class="btn btn-info gradeLetter">{{ grades['Grade'] }} - {{(grades['Points']|int/grades['Possible']|int*100)|round(1)}}%</button></td>
+                    {% elif grades['Grade'] == 'C' %}
+                        <td><button type="button" class="btn btn-primary gradeLetter">{{ grades['Grade'] }} - {{(grades['Points']|int/grades['Possible']|int*100)|round(1)}}%</button></td>
+                    {% elif grades['Grade'] == 'D' %}
+                        <td><button type="button" class="btn btn-warning gradeLetter">{{ grades['Grade'] }} - {{(grades['Points']|int/grades['Possible']|int*100)|round(1)}}%</button></td>
+                    {% elif grades['Grade'] == 'E' %}
+                        <td><button type="button" class="btn btn-danger gradeLetter">{{ grades['Grade'] }} - {{(grades['Points']|int/grades['Possible']|int*100)|round(1)}}%</button></td>
+                    {% elif grades['Grade'] %}
+                        <td><button type="button" class="btn btn-secondary gradeLetter">{{ grades['Grade'] }} - {{(grades['Points']|int/grades['Possible']|int*100)|round(1)}}%</button></td>
+                    {% else %}
+                        <td><button type="button" class="btn btn-secondary gradeLetter" disabled> &nbsp;&nbsp; </button></td>
+                    {% endif %}
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>  
+</div> 
+{% endblock content %}

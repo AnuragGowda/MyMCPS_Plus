@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="alert alert-warning beta-warning col-md-4 offset-md-4" role="alert">
+    <strong>Beta Version!</strong> This website is still in beta version and may not be fully functional yet.
+</div>
+<div class="col-md-4 offset-md-4 login-form">
+    <form method="POST" action='\'>
+        {{ form.csrf_token }} 
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Log In</legend>
+            <div class="form-group">
+                {{ form.username.label(class="form-control-label") }} 
+                {% if form.username.errors %}
+                    {{ form.username(class="form-control form-control-lg is-invalid", id = 'flash')}}
+                    <div class="invalid-feedback" id = 'flash'>
+                            <span>Field must be 6 characters long.</span>
+                    </div>
+                {% else %}
+                    {{ form.username(class="form-control form-contol-lg")}}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.password.label(class="form-control-label") }}
+                {% if form.password.errors %}
+                    {{ form.password(class="form-control form-control-lg is-invalid", id = 'flash')}}
+                    <div class="invalid-feedback" id = 'flash'>
+                        <span>Field must be 8 characters long.</span>
+                    </div>
+                {% else %}
+                    {{ form.password(class="form-control form-contol-lg")}}
+                {% endif %}
+            </div>
+            <!--<input type = "hidden" name = 'outputPw' value = '{{ formData }}' id = 'inputPskey'>
+            <input type = "hidden" name = 'outputDpw' value = '{{ formPassword }}' id = 'inputOpriginalpw'>-->
+        </fieldset>
+        {{ form.submit(class="btn btn-outline-info", id='submit') }}
+    </form>
+</div>
+<div id='overlay'>
+    <img src="{{ url_for('static', filename='loading.gif') }}"/><br/>
+    <h1>Loading...</h1>
+</div>
+{% endblock content %}

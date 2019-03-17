@@ -1,0 +1,84 @@
+body {
+    background: #eef7fa;
+}
+.login-form{
+    background: #ffffff;
+    padding: 10px 20px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+}
+.navbar-brand { 
+    font-size: 2rem;
+}
+.beta-warning{
+    margin-top: 160px;
+}
+.info{
+    margin-top: 40px;
+    background: #ffffff;
+    padding: 15px 20px 15px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+}
+.grades{
+    margin-top: 10px;
+    background: #ffffff;
+    padding: 15px 20px 0px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+}
+.grade-header{
+    margin-top: 10px;
+    background: #ffffff;
+    padding: 15px 20px 10px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+}
+.grade-info{
+    margin-top: 30px;
+    padding: 15px 20px 0px 20px;
+    border-radius: 3px;
+}
+.hidden-spinner{
+    display:none
+}
+#overlay {
+    display:none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    filter:alpha(opacity=50);
+    opacity: 0.5;
+    z-index: 10000;
+    text-align: center;
+    padding-top: 15%;
+}
+/*
+#overlay {
+    v
+    color: #666666;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 5000;
+    top: 0;
+    left: 0;
+    float: left;
+    text-align: center;
+    padding-top: 25%;
+}
+*/
+.ext{
+    position: relative;
+    top: -5px;
+}
+.gradeInput{
+    width: 60px
+}
