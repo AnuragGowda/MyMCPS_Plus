@@ -1,2 +1,2 @@
 # MyMCPS_Plus
-rest coming soon
+More detail coming soon
