@@ -99,5 +99,5 @@ def crash():
 
 @app.errorhandler(410)
 def deletedInfo():
-    flash('It seems that the data you are trying to access has been mysteriously deleted or changed! If this problem persists, contact the creators of this website.', 'danger')
+    flash('It seems that the data you are trying to access has been mysteriously deleted or changed! If this problem persists, contact the creator of this website.', 'danger')
     return redirect(url_for('getInfo'))
