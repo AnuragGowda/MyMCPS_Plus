@@ -5,7 +5,6 @@ from flask_session import Session
 import requests, lxml.html, json
 from datetime import datetime
 import os.path
-from OpenSSL import SSL
 s = requests.session()
 login = s.get('https://portal.mcpsmd.org/public/')
 login_html = lxml.html.fromstring(login.text)
