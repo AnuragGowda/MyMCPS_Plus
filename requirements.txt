@@ -52,7 +52,6 @@ pycparser==2.19
 pygame==1.9.4
 Pygments==2.3.1
 pygsheets==2.0.0
-pyHook==1.5.1
 pylint==2.2.2
 PyMsgBox==1.0.6
 pyOpenSSL==18.0.0
