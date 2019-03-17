@@ -52,7 +52,7 @@ def getInfo():
             if data:
                 session['gradeData'] = data
                 session['login'] = True
-                flash('You have been logged in', 'success')
+                flash('You have been logged in!', 'success')
                 return redirect(url_for('grades'))
             else:
                 flash('Login Unsuccessful, Try Again.', 'danger')
