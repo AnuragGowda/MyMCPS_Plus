@@ -2,14 +2,12 @@ from gradedisplay import app
 from gradedisplay.form import LoginForm
 from flask import render_template, url_for, request, flash, redirect, make_response, session
 from flask_session import Session
-import requests, lxml.html, json
+import requests, json
 from datetime import datetime
 import os.path
 s = requests.session()
 login = s.get('https://portal.mcpsmd.org/public/')
-login_html = lxml.html.fromstring(login.text)
-hidden_inputs = login_html.xpath(r'//form//input[@type="hidden"]')
-form = {x.attrib["name"]: x.attrib["value"] for x in hidden_inputs}
+form = {}
 sess = Session()
 sess.init_app(app)
 def load_data(form):
@@ -47,7 +45,7 @@ def getInfo():
     login = LoginForm(request.form)
     if request.method == 'POST':
         if login.validate_on_submit():
-            form['account'], form['ldappassword'], form['pw'] = request.form['username'], request.form['password'], form['contextData']
+            form['account'], form['ldappassword'], form['pw'] = request.form['username'], request.form['password'], '0'
             data = load_data(form)
             if data:
                 session['gradeData'] = data
