@@ -2,9 +2,8 @@ from gradedisplay import app
 from gradedisplay.form import LoginForm
 from flask import render_template, url_for, request, flash, redirect, make_response, session
 from flask_session import Session
-import requests, lxml.html, json
+import requests, lxml.html, json, os
 from datetime import datetime
-import os.path
 s = requests.session()
 login = s.get('https://portal.mcpsmd.org/public/')
 login_html = lxml.html.fromstring(login.text)
@@ -38,6 +37,12 @@ def load_data(form):
                             gradeInfo.insert(period*2+1, specialData[data]) 
                             gradeInfo.insert(period*2+2, [{},{}])
         return gradeInfo
+    
+@app.before_request
+def cleanSessionData():
+    for filename in os.listdir(os.getcwd()+'\\flask_session'):
+        if time.time() - os.path.getmtime(os.getcwd()+'\\flask_session\\'+filename) > 900:
+            os.remove(os.getcwd()+'\\flask_session\\'+filename)
 
 @app.route('/', methods=['GET', 'POST'])
 def getInfo():
