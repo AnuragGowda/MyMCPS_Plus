@@ -2,7 +2,7 @@ from gradedisplay import app
 from gradedisplay.form import LoginForm
 from flask import render_template, url_for, request, flash, redirect, make_response, session
 from flask_session import Session
-import requests, lxml.html, json, os
+import requests, lxml.html, json, os, time
 from datetime import datetime
 s = requests.session()
 login = s.get('https://portal.mcpsmd.org/public/')
