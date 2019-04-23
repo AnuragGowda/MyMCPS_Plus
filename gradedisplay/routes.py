@@ -25,9 +25,9 @@ def load_data(form):
         loginData = s.get('https://portal.mcpsmd.org/guardian/prefs/gradeByCourseSecondary.json?schoolid='+gradeInfo[0][0]+'&student_number='+form['account']+'&studentId='+gradeInfo[0][1]).json()
         for quarter in range(len(loginData)-1):
             if loginData[quarter]['termid'] == 'MP4':
-                basicInfo = s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CourseDetail.json?secid='+loginData[quarter]['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json()  
+                basicInfo = s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CourseDetail.json?secid='+loginData[quarter]['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP4').json()  
                 gradeInfo.append([basicInfo['courseName'], basicInfo['overallgrade'], float(basicInfo['percent']), basicInfo['teacher'], basicInfo['email_addr'], basicInfo['sectionid'], basicInfo['period']])
-                gradeInfo.append([s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CategoryDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json(), s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_AssignmentDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json()])
+                gradeInfo.append([s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CategoryDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP4').json(), s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_AssignmentDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json()])
             elif loginData[quarter]['termid'] == '':
                 specialData.append([loginData[quarter]['courseName'], '', '', loginData[quarter]['teacher'], loginData[quarter]['email_addr'], loginData[quarter]['sectionid'], loginData[quarter]['period']])
         if specialData:
