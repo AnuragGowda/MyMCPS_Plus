@@ -24,7 +24,7 @@ def load_data(form):
         gradeInfo, specialData = [[response.text[response.text.find('root.schoolId')+26:response.text.find('root.schoolId')+29], response.text[response.text.find('root.guardianId')+19: response.text.find('root.guardianId')+24]]],[]
         loginData = s.get('https://portal.mcpsmd.org/guardian/prefs/gradeByCourseSecondary.json?schoolid='+gradeInfo[0][0]+'&student_number='+form['account']+'&studentId='+gradeInfo[0][1]).json()
         for quarter in range(len(loginData)-1):
-            if loginData[quarter]['termid'] == 'MP3':
+            if loginData[quarter]['termid'] == 'MP4':
                 basicInfo = s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CourseDetail.json?secid='+loginData[quarter]['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json()  
                 gradeInfo.append([basicInfo['courseName'], basicInfo['overallgrade'], float(basicInfo['percent']), basicInfo['teacher'], basicInfo['email_addr'], basicInfo['sectionid'], basicInfo['period']])
                 gradeInfo.append([s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CategoryDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json(), s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_AssignmentDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json()])
