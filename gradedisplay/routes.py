@@ -37,12 +37,13 @@ def load_data(form):
                             gradeInfo.insert(period*2+1, specialData[data]) 
                             gradeInfo.insert(period*2+2, [{},{}])
         return gradeInfo
-    
+'''
 @app.before_request
 def cleanSessionData():
     for filename in os.listdir(os.getcwd()+'\\flask_session'):
         if time.time() - os.path.getmtime(os.getcwd()+'\\flask_session\\'+filename) > 900:
             os.remove(os.getcwd()+'\\flask_session\\'+filename)
+'''
 
 @app.route('/', methods=['GET', 'POST'])
 def getInfo():
