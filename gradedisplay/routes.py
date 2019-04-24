@@ -42,8 +42,8 @@ def load_data(form):
 def cleanSessionData():
     try:
         for filename in os.listdir(os.getcwd()+'//flask_session'):
-            if time.time() - os.path.getmtime(os.getcwd()+'//flask_session//'+filename) > 900:
-                os.remove(os.getcwd()+'//flask_session//'+filename+'//asd')
+            if tifme.time() - os.path.getmtime(os.getcwd()+'//flask_session//'+filename) > 900:
+                os.remove(os.getcwd()+'//flask_session//'+filename)
     except Exception as e:
         flash('An error occured: '+e+'. The developer will be notified', 'danger')
 
