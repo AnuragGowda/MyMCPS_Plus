@@ -43,7 +43,7 @@ def cleanSessionData():
     try:
         for filename in os.listdir(os.getcwd()+'//flask_session'):
             if time.time() - os.path.getmtime(os.getcwd()+'//flask_session//'+filename) > 900:
-                os.remove(os.getcwd()+'//flask_session//'+filename)
+                os.remove(os.getcwd()+'//flask_session//'+filenmame)
     except Exception as e:
         flash('An error occured: '+str(e)+'. The developer will be notified', 'danger')
 
