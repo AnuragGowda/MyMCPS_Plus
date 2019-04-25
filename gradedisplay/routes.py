@@ -45,7 +45,7 @@ def cleanSessionData():
             if time.time() - os.path.getmtime(os.getcwd()+'//flask_session//'+filename) > 900:
                 os.remove(os.getcwd()+'//flask_session//'+filename)
     except Exception as e:
-        flash('An error occured: '+e+'. The developer will be notified', 'danger')
+        flash('An error occured: '+str(e)+'. The developer will be notified', 'danger')
 
 @app.route('/', methods=['GET', 'POST'])
 def getInfo():
