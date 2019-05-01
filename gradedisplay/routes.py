@@ -11,6 +11,7 @@ hidden_inputs = login_html.xpath(r'//form//input[@type="hidden"]')
 form = {x.attrib["name"]: x.attrib["value"] for x in hidden_inputs}
 sess = Session()
 sess.init_app(app)
+
 def load_data(form):
     response = s.post('https://portal.mcpsmd.org/guardian/home.html', data=form)
     for i in range(3):
@@ -20,15 +21,24 @@ def load_data(form):
     if response.text.find('root.schoolId') == -1:
         return
     else:
-        gradeInfo, specialData = [[response.text[response.text.find('root.schoolId')+26:response.text.find('root.schoolId')+29], response.text[response.text.find('root.guardianId')+19: response.text.find('root.guardianId')+24]]],[]
-        loginData = s.get('https://portal.mcpsmd.org/guardian/prefs/gradeByCourseSecondary.json?schoolid='+gradeInfo[0][0]+'&student_number='+form['account']+'&studentId='+gradeInfo[0][1]).json()
+        gradeInfo, specialData = [[response.text[response.text.find('root.schoolId')+26:response.text.find('root.schoolId')+29],\
+            response.text[response.text.find('root.guardianId')+19: response.text.find('root.guardianId')+24]]],[]
+        loginData = s.get('https://portal.mcpsmd.org/guardian/prefs/gradeByCourseSecondary.json?schoolid='+gradeInfo[0][0]+\
+            '&student_number='+form['account']+'&studentId='+gradeInfo[0][1]).json()
         for quarter in range(len(loginData)-1):
             if loginData[quarter]['termid'] == 'MP4':
-                basicInfo = s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CourseDetail.json?secid='+loginData[quarter]['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP4').json()  
-                gradeInfo.append([basicInfo['courseName'], basicInfo['overallgrade'], float(basicInfo['percent']), basicInfo['teacher'], basicInfo['email_addr'], basicInfo['sectionid'], basicInfo['period']])
-                gradeInfo.append([s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CategoryDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP4').json(), s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_AssignmentDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json()])
+                basicInfo = s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CourseDetail.json?secid='+loginData\
+                    [quarter]['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP4').json()  
+                gradeInfo.append([basicInfo['courseName'], basicInfo['overallgrade'], float(basicInfo['percent']),\
+                    basicInfo['teacher'],basicInfo['email_addr'], basicInfo['sectionid'], basicInfo['period']])
+                gradeInfo.append([s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CategoryDetail.json?secid='+\
+                    basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP4').json(),\
+                        s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_AssignmentDetail.json?secid='+\
+                            basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json()])
             elif loginData[quarter]['termid'] == '':
-                specialData.append([loginData[quarter]['courseName'], '', '', loginData[quarter]['teacher'], loginData[quarter]['email_addr'], loginData[quarter]['sectionid'], loginData[quarter]['period']])
+                specialData.append([loginData[quarter]['courseName'], '', '', loginData[quarter]['teacher'],\
+                    loginData[quarter]['email_addr'], loginData[quarter]['sectionid'],\
+                    loginData[quarter]['period']])
         if specialData:
             for period in range(int(loginData[-3]['period'])-1):
                 if (period)*2+1 > len(gradeInfo)-1 or gradeInfo[(period)*2+1][6] != "0"+str(period+1):
@@ -49,12 +59,17 @@ def cleanSessionData():
 
 @app.route('/', methods=['GET', 'POST'])
 def getInfo():
+    checkValid = True
     if session.get('login', False):
         flash('You are already logged in!', 'success')
         return redirect(url_for('grades'))
     login = LoginForm(request.form)
     if request.method == 'POST':
-        if login.validate_on_submit():
+        if request.form['username'] == 'example' and request.form['password'] == 'password':
+            session['login'] = True
+            session['gradeData'] = [['0','0'],['Class1','A',100.0,'Teacher1','teacher1@mcpsmd.org','0','01'],[[{'Id':0,'CategoryGrade':'A','Description':'Category1(34)','OrganizationId':0,'Percent':100.0,'PointsEarned':'100.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'A','Missing':'0','Percent':'','Points':'100.0'},{}]],['Class2','B',80.0,'Teacher2','teacher2@mcpsmd.org','0','02'],[[{'Id':0,'CategoryGrade':'B','Description':'Category1(34)','OrganizationId':0,'Percent':80.0,'PointsEarned':'80.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'B','Missing':'0','Percent':'','Points':'80.0'},{}]],['Class3','C',70.0,'Teacher3','teacher3@mcpsmd.org','0','03'],[[{'Id':0,'CategoryGrade':'C','Description':'Category1(34)','OrganizationId':0,'Percent':70.0,'PointsEarned':'70.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'C','Missing':'0','Percent':'','Points':'70.0'},{}]],['Class4','D',60.0,'Teacher4','teacher4@mcpsmd.org','0','04'],[[{'Id':0,'CategoryGrade':'A','Description':'Category1(34)','OrganizationId':0,'Percent':60.0,'PointsEarned':'60.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'D','Missing':'0','Percent':'','Points':'60.0'},{}]],['Class5','E',50.0,'Teacher5','teacher5@mcpsmd.org','0','05'],[[{'Id':0,'CategoryGrade':'E','Description':'Category1(34)','OrganizationId':0,'Percent':50.0,'PointsEarned':'50.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'A','Missing':'0','Percent':'','Points':'50.0'},{}]]]
+            checkValid = False
+        if login.validate_on_submit() and checkValid:
             form['account'], form['ldappassword'], form['pw'] = request.form['username'], request.form['password'], '0'
             data = load_data(form)
             if data:
