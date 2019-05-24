@@ -133,7 +133,7 @@ def getInfo():
             # Check valid is false, we don;t need to validate credentials anymore 
             checkValid = False
         # If they credentials that they entered into the form are valid then we can do stuff with them
-        elif login.validate_on_submit() and checkValid:
+        if login.validate_on_submit() and checkValid:
             # Fill in some of the form fields of the form that we created at the beginning of the program, so that the form is complete when we post the data to MyMCPS
             form['account'], form['ldappassword'], form['pw'] = request.form['username'], request.form['password'], '0'
             # Store the output of the load_data function in data when we send the form to the fucntion
