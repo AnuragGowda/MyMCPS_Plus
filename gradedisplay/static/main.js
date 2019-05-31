@@ -1,10 +1,10 @@
-/*// Set an overlay variable which will be useful later
-var overlay = jQuery('<div id="overlay"> </div>');
+// Create an overlay variable which will be useful later, this overlay has addtional properties due to the css which is why originally it is hidden
+//var overlay = jQuery('<div id="overlay"></div>');
 // When the submit button is clicked
 $("#submit").click(function() {
     // Show the div, which is the overlay
     $("div").show();
-});*/
+});
 // This is a simple function that removes the active traits of the headers of the website
 function clearAll(){
     // Remove the about-color, this corresponds to the about button in the header
