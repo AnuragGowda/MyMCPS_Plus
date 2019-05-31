@@ -107,7 +107,7 @@ def cleanSessionData():
         # Display an error message to the user, the developer actually wont be notified, but if there was a recurring problem, I would already know about it
         flash('An error occured: '+str(e)+'. The developer will be notified', 'danger')
 
-# Decorator which makes the followin function run when the user goes to the default page, hence the "/", also allow both get and post requests since we have a form
+# Decorator which makes the following function run when the user goes to the default page, hence the "/", also allow both get and post requests since we have a form
 @app.route('/', methods=['GET', 'POST'])
 # The actual function that handles what to do when the user gets on the website
 def getInfo():
@@ -152,50 +152,87 @@ def getInfo():
             else:
                 # Simply tell the user that the login was unsuccessful
                 flash('Login Unsuccessful, Try Again.', 'danger')
-    # This section here tells the app to send the user the home page when they connect to our website, it also sets up some things  
+    # This section here tells the app to send the user the home page when they connect to our website, it also sets up some things
     return render_template('home.html', title = 'Login', formData=form['contextData'], formPassword=form['ldappassword'], form=login)
 
+# Decorator that makes the following function handle the /grades page on the website
 @app.route('/grades')
+# The actual function handling the grade page
 def grades():
+    # If the user hasn't logged on we continue
     if not session.get('login', False):
+        # Tell them that they haaven't logged on
         flash('You haven\'t logged in, please log in first!', 'danger')
+        # Redirect them to the login page
         return redirect(url_for('getInfo'))
+    # If they werent redirected, then the following code will run, first we intialize a list     
     overallInfo = []
+    # We iterate through the amount of periods that the user has
     for i in range(int(session.get('gradeData', '')[-2][-1])):
+        # Append info to overallInfo, the data that is appended is simply the basic class data
         overallInfo.append(session.get('gradeData', '')[(i+1)*2-1])
+    # Send the user the page, when creating the page, we also send the page the overallInfo and the periods that the user has
     return render_template('grades.html', title = 'Grades', data=overallInfo, periods=range(int(session.get('gradeData', '')[-2][-1])))
 
+# This is another decorator that handles a specific page, but the page depends on the argument classData, depending on what class data is, a different class may be shown to the user
 @app.route('/gradePage/<classData>')
+# The actual function, the argument class data is set to whatever is after the /gradePage/ in the url
 def gradePage(classData):
+    # Again, if they haven't logged in, we determine this by checking a varibale that we stored in the session
     if not session.get('login', False):
+        # Alert the user that they haven't logged in 
         flash('You haven\'t logged in, please log in first', 'danger')
+        # Redirect the user to the login page
         return redirect(url_for('getInfo'))
+    # If they are logged in however, then send them to the page with thte grade data of the class that they requestesd, we also "send" some information to our page here like how we did with the previous pages
     return render_template('gradePage.html', title = session.get('gradeData', '')[(int(classData)+1)*2-1][0], data = session.get('gradeData', '')[(int(classData)+1)*2], info = session.get('gradeData', '')[(int(classData)+1)*2-1])
 
+# Decorator that makes the following function handle the /about page on the website
 @app.route('/about')
+# Actual function that handles everything
 def about():
+    # Since this page is quite simple, all we have to do is return the html template
     return render_template('about.html', title = 'About Page')
 
+# Decorator that makes the following function handle the /contact page on the website
 @app.route('/contact')
+# Again the actual function
 def contact():
+    # Like the about page, there isn't much we need to do, simply send the contact page
     return render_template('contact.html', title = 'Contact Page')
 
+# Decorator that makes the following function handle the /logout "page" on the website, not really a page, but...
 @app.route('/logout')
+# Actual function, so this page isn't really an actual page, it just logs the user out pretty much... hence the name 
 def logout():
+    # Set the session value of the login to be false
     session['login'] = False
+    # Tell the user they have been logged out
     flash('You have been logged out!', 'info')
+    # Finally, redirect them to the login page
     return redirect(url_for('getInfo'))
 
+# Decorator that is supposed to handle the error 404 which is for pages that do not exist, so for instance if the user typed some thing random after our domain name (like mymcpsplus.herokuapp.com/blahblahblah), this would handle the error that would occur
 @app.errorhandler(404)
-def pageNotFound(e):
+# Actual function that handles the page not being found
+def pageNotFound():
+    # Tell the user they tried to go to a non existent page
     flash('You have entered a url that does not exist! You have been redirected.', 'warning')
+    # Redirect them to the login page
     return redirect(url_for('getInfo'))
 
+# Decorator that handles the error 500 which is an internal server error, which is a pretty general error where something goes wrong, but the website doesn't really know what caused the crash
 @app.errorhandler(500)
+# Actual function
 def crash():
+    # Return a page with a crash message
     return render_template('crash.html', title = 'Crash Page')
 
+# Decorator that deals with the error 410, this is used for data that goes missing on the server for various reasons, I put this in just in case, but I don't think it will ever trigger
 @app.errorhandler(410)
+# Actual function
 def deletedInfo():
+    # Tell the user that a problem has occurred 
     flash('It seems that the data you are trying to access has been mysteriously deleted or changed! If this problem persists, contact the creator of this website.', 'danger')
+    # Redirect them to the homepage
     return redirect(url_for('getInfo'))
