@@ -1,12 +1,10 @@
-// Set an overlay variable which will be useful later
+/*// Set an overlay variable which will be useful later
 var overlay = jQuery('<div id="overlay"> </div>');
 // When the submit button is clicked
 $("#submit").click(function() {
     // Show the div, which is the overlay
     $("div").show();
-    // Set the variable of selected in the session to the name grades-color, this is important later on 
-    sessionStorage.setItem('selected', 'grades-color')
-});
+});*/
 // This is a simple function that removes the active traits of the headers of the website
 function clearAll(){
     // Remove the about-color, this corresponds to the about button in the header
@@ -16,64 +14,27 @@ function clearAll(){
     // Remove the contact-color, this corresponds to the about button in the header
     document.getElementById("contact-color").classList.remove('active');
 }
-// When the page loads
+// When the page loads the following function runs
 $( document ).ready(function() {
-    // Set an interval that occurs every 100 miliseconds which is 1/10 of a second that checks if the document title is that of the login page or the grade page, sets everything accordingly 
-    /*var setScreen = setInterval(function(){
-        // If the title is the login page one
-        if (document.title == 'MyMCPS++ - Login'){
-            // Clear all of the headers active states with the function we defined above
-            clearAll();
-            // Clear the interval as well
-            clearInterval(setScreen)
-        }
-        // If the title is the grade page 
-        else if (document.title == 'MyMCPS++ - Grades'){
-            clearAll();
-            document.getElementById("grades-color").classList.add('active');
-            clearInterval(setScreen)
-        }
-    }, 100);
-    // If there is nothing in the session storage, this will only occur when then user has just started using the website
-    if (sessionStorage.getItem('selected') != null){
-        
-        if (sessionStorage.getItem('selected') == 'grades-color'){
-            clearAll();
-            document.getElementById("grades-color").classList.add('active');
-        }
-        else if (sessionStorage.getItem('selected') == 'contact-color'){
-            clearAll();
-            document.getElementById("contact-color").classList.add('active');
-        }
-        else{
-            clearAll();
-            document.getElementById("about-color").classList.add('active');
-        }
-    }
-
-});
-$("#grades-btn").click(function() {
-    if (document.title != 'MyMCPS++ - Login'){
-        sessionStorage.setItem('selected', 'grades-color');
-    }
-});
-$("#about-btn").click(function() {
-    sessionStorage.setItem('selected', 'about-color')
-});
-$("#contact-btn").click(function() {
-    sessionStorage.setItem('selected', 'contact-color')
-*/
+    // First, clear all of the highlighted headers
     clearAll();
+    // If the title of the current page is the grade one
     if (document.title == 'MyMCPS++ - Grades'){
+        // Add the active trait to the corresponding header
         document.getElementById("grades-color").classList.add('active');
     }
+    // However if its the about page,
     else if (document.title == 'MyMCPS++ - About Page'){
+        // Add the active attribute to the corresponding header
         document.getElementById("about-color").classList.add('active');
     }
+    // And finally if we are on the contact page,
     else if (document.title == 'MyMCPS++ - Contact Page'){
+        // Make the corresopning header active
         document.getElementById("contact-color").classList.add('active');
     }
 });
+
 var headers = [];
 function addDropdown(text){
     var dropdown = '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
