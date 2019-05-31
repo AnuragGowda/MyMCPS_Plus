@@ -18,7 +18,6 @@ function clearAll(){
 }
 // When the page loads
 $( document ).ready(function() {
-    console.log('hi')
     // Set an interval that occurs every 100 miliseconds which is 1/10 of a second that checks if the document title is that of the login page or the grade page, sets everything accordingly 
     /*var setScreen = setInterval(function(){
         // If the title is the login page one
@@ -34,7 +33,7 @@ $( document ).ready(function() {
             document.getElementById("grades-color").classList.add('active');
             clearInterval(setScreen)
         }
-    }, 100);*/
+    }, 100);
     // If there is nothing in the session storage, this will only occur when then user has just started using the website
     if (sessionStorage.getItem('selected') != null){
         
@@ -51,6 +50,7 @@ $( document ).ready(function() {
             document.getElementById("about-color").classList.add('active');
         }
     }
+
 });
 $("#grades-btn").click(function() {
     if (document.title != 'MyMCPS++ - Login'){
@@ -62,6 +62,17 @@ $("#about-btn").click(function() {
 });
 $("#contact-btn").click(function() {
     sessionStorage.setItem('selected', 'contact-color')
+*/
+    clearAll();
+    if (document.title == 'MyMCPS++ - Grades'){
+        document.getElementById("grades-color").classList.add('active');
+    }
+    else if (document.title == 'MyMCPS++ - About Page'){
+        document.getElementById("about-color").classList.add('active');
+    }
+    else if (document.title == 'MyMCPS++ - Contact Page'){
+        document.getElementById("contact-color").classList.add('active');
+    }
 });
 var headers = [];
 function addDropdown(text){
