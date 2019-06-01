@@ -89,7 +89,7 @@
                     {% elif grades['Grade'] == 'E' %}
                         <td><button type="button" class="btn btn-danger gradeLetter">{{ grades['Grade'] }} - {{(grades['Points']|float/grades['Possible']|float*100)|round(1)}}%</button></td>
                     {% elif grades['Grade'] %}
-                        <td><button type="button" class="btn btn-secondary gradeLetter">{{ grades['Grade'] }} - {{(grades['Points']|float/grades['Possible']|float*100)|round(1)}}%</button></td>
+                        <td><button type="button" class="btn btn-secondary gradeLetter" disabled>{{ grades['Grade'] }}</button></td>
                     {% else %}
                         <td><button type="button" class="btn btn-secondary gradeLetter" disabled> &nbsp;&nbsp; </button></td>
                     {% endif %}
