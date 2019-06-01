@@ -186,6 +186,30 @@ $(document).on('click', '#editGrades', function(){
     if(doUpdate){updateGrades()}
 });
 
+// If they change either of the input feilds for the grades
+$(document).on('change', '.col-sm input', function(){
+    // Create some helpful variables, this is the same process as before
+    var one = $(this).closest("form").find(".one").val(),
+        // Two again is the points possible
+        two = $(this).closest("form").find(".two").val(),
+        // The same as last time, a boolean to determine if we need to calculate the percent
+        doPercent = true,
+        // Defaults to success
+        btn = 'success',
+        // Default to a
+        grade = 'A'
+    // Again, we have the long line thing
+    if (two == 0){doPercent = false}else if (one/two >= .795 && one/two < .895){btn = 'info', grade = 'B'}else if (one/two > .695 && one/two < .895){btn = 'primary', grade = 'C'}else if (one/two > .595 && one/two < .895){btn = 'warning', grade = 'D'}else if (one/two < .595){btn = 'danger', grade = 'E'}
+    // Quick ternary operator
+    doPercent?percent = String((one/two*100).toFixed(1))+'%':percent = '100%'
+    // Change everything
+    $(this).closest("tr").find('.gradeLetter').text(grade+' - '+percent).prop("disabled", false).removeClass().addClass('btn btn-'+btn+' gradeLetter')
+    // Finally update the grades
+    updateGrades()
+});
+
+// Some easy stuff at the end and then we are done
+
 // Function that handles what happens when the add grade button is clicked
 $(document).on('click', '#addGrade', function(){
     // Create a new row, and in that row we put the same stuff as what would be in all the other rows, set the points earned to 0 and the points possible to 1, set the description to user entered grade and also add the dropdown
@@ -212,27 +236,5 @@ $(document).on('click', '.dropdown-menu a', function(){
     // Set the text of the dropdown to that value
     $(this).closest("td").find('button').text($(this).text())
     // Update the grades
-    updateGrades()
-});
-
-// If they change either of the input feilds for the grades
-$(document).on('change', '.col-sm input', function(){
-    // Create some helpful variables, this is the same process as before
-    var one = $(this).closest("form").find(".one").val(),
-        // Two again is the points possible
-        two = $(this).closest("form").find(".two").val(),
-        // The same as last time, a boolean to determine if we need to calculate the percent
-        doPercent = true,
-        // Defaults to success
-        btn = 'success',
-        // Default to a
-        grade = 'A'
-    // Again, we have the long line thing
-    if (two == 0){doPercent = false}else if (one/two >= .795 && one/two < .895){btn = 'info', grade = 'B'}else if (one/two > .695 && one/two < .895){btn = 'primary', grade = 'C'}else if (one/two > .595 && one/two < .895){btn = 'warning', grade = 'D'}else if (one/two < .595){btn = 'danger', grade = 'E'}
-    // Quick ternary operator
-    doPercent?percent = String((one/two*100).toFixed(1))+'%':percent = '100%'
-    // Change everything
-    $(this).closest("tr").find('.gradeLetter').text(grade+' - '+percent).prop("disabled", false).removeClass().addClass('btn btn-'+btn+' gradeLetter')
-    // Finally update the grades
     updateGrades()
 });
