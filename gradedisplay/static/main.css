@@ -2,6 +2,14 @@
 body {
     background: #eef7fa;
 }
+.error-form{
+    margin-top: 10px;
+    background: #ffffff;
+    padding: 15px 20px 0px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
 .login-form{
     background: #ffffff;
     padding: 10px 20px 20px;

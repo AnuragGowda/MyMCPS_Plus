@@ -1,13 +1,13 @@
 # Import the app from our package
 from gradedisplay import app
 # Also import this LoginForm object
-from gradedisplay.form import LoginForm
+from gradedisplay.form import LoginForm, ErrorForm
 # Import some built in functions of flask
 from flask import render_template, url_for, request, flash, redirect, make_response, session
 # Import sessions 
 from flask_session import Session
 # Import other useful stuff
-import requests, lxml.html, json, os, time
+import requests, lxml.html, json, os, time, smtplib
 
 # Create an instance of a request object
 s = requests.session()
@@ -87,7 +87,7 @@ def load_data(form):
         # So as you can see, we have a large list which begins with a small list containing the school and guardian id (which are actually useless after we have gathered the data but I'm to remove them because I would have to change the rest of the program and I'm too lazy to change everything, maybe I will later)
         # After that list, we have a class which is a list that has some attributes of the class, with another list is followed by another list which has two dictionaries containing grade data 
         # Then we would have more classes following that class, meaning two lists (per class), the first with class attributes the second with dictionaries with grade data
-        # Thats it for the data gathering/formatting part which I think was one of the hardest parts of this program 
+        # Thats it for the data gathering/formatting part which I think was one of the hardest parts of this program , honestly I think by organizing the data this way I made it harder for myself
 
 # Decorator before_request, makes the following function run when they are fetching the website
 @app.before_request
@@ -112,8 +112,6 @@ def cleanSessionData():
 # The actual function that handles what to do when the user gets on the website
 def getInfo():
     '''login page for the website'''
-    # A variable that will be used in case the user would like to enter dummy data just to see what the app looks like 
-    checkValid = True
     # Before doing anything, we check to see if there is already current session data, we check to see if the user has already logged in
     if session.get('login', False):
         # Tell the user that they have already logged in
@@ -129,11 +127,11 @@ def getInfo():
             # Set the session login to true so that we can tell the user has logged on while the session is still active
             session['login'] = True
             # Also in the session, create a grade data variable and assign it the dummy example data 
-            session['gradeData'] = [['0','0'],['Class1','A',100.0,'Teacher1','teacher1@mcpsmd.org','0','01'],[[{'Id':0,'CategoryGrade':'A','Description':'Category1(34)','OrganizationId':0,'Percent':100.0,'PointsEarned':'100.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'A','Missing':'0','Percent':'','Points':'100.0'},{}]],['Class2','B',80.0,'Teacher2','teacher2@mcpsmd.org','0','02'],[[{'Id':0,'CategoryGrade':'B','Description':'Category1(34)','OrganizationId':0,'Percent':80.0,'PointsEarned':'80.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'B','Missing':'0','Percent':'','Points':'80.0'},{}]],['Class3','C',70.0,'Teacher3','teacher3@mcpsmd.org','0','03'],[[{'Id':0,'CategoryGrade':'C','Description':'Category1(34)','OrganizationId':0,'Percent':70.0,'PointsEarned':'70.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'C','Missing':'0','Percent':'','Points':'70.0'},{}]],['Class4','D',60.0,'Teacher4','teacher4@mcpsmd.org','0','04'],[[{'Id':0,'CategoryGrade':'A','Description':'Category1(34)','OrganizationId':0,'Percent':60.0,'PointsEarned':'60.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'D','Missing':'0','Percent':'','Points':'60.0'},{}]],['Class5','E',50.0,'Teacher5','teacher5@mcpsmd.org','0','05'],[[{'Id':0,'CategoryGrade':'E','Description':'Category1(34)','OrganizationId':0,'Percent':50.0,'PointsEarned':'50.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'A','Missing':'0','Percent':'','Points':'50.0'},{}]]]
-            # Check valid is false, we don;t need to validate credentials anymore 
-            checkValid = False
+            session['gradeData'] = [['0','0'],['Class1','A',100.0,'Teacher1','teacher1@mcpsmd.org','0','01'],[[{'Id':0,'CategoryGrade':'A','Description':'Category1(34)','OrganizationId':0,'Percent':100.0,'PointsEarned':'100.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'A','Missing':'0','Percent':'','Points':'100.0'},{}]],['Class2','B',80.0,'Teacher2','teacher2@mcpsmd.org','0','02'],[[{'Id':0,'CategoryGrade':'B','Description':'Category1(34)','OrganizationId':0,'Percent':80.0,'PointsEarned':'80.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'B','Missing':'0','Percent':'','Points':'80.0'},{}]],['Class3','C',70.0,'Teacher3','teacher3@mcpsmd.org','0','03'],[[{'Id':0,'CategoryGrade':'C','Description':'Category1(34)','OrganizationId':0,'Percent':70.0,'PointsEarned':'70.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'C','Missing':'0','Percent':'','Points':'70.0'},{}]],['Class4','D',60.0,'Teacher4','teacher4@mcpsmd.org','0','04'],[[{'Id':0,'CategoryGrade':'A','Description':'Category1(34)','OrganizationId':0,'Percent':60.0,'PointsEarned':'60.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'D','Missing':'0','Percent':'','Points':'60.0'},{}]],['Class5','E',50.0,'Teacher5','teacher5@mcpsmd.org','0','05'],[[{'Id':0,'CategoryGrade':'E','Description':'Category1(34)','OrganizationId':0,'Percent':50.0,'PointsEarned':'50.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'E','Missing':'0','Percent':'','Points':'50.0'},{}]]]
+            # Redirect them to the grades page 
+            return redirect(url_for('grades'))
         # If they credentials that they entered into the form are valid then we can do stuff with them
-        if login.validate_on_submit() and checkValid:
+        elif login.validate_on_submit():
             # Fill in some of the form fields of the form that we created at the beginning of the program, so that the form is complete when we post the data to MyMCPS
             form['account'], form['ldappassword'], form['pw'] = request.form['username'], request.form['password'], '0'
             # Store the output of the load_data function in data when we send the form to the fucntion
@@ -152,8 +150,8 @@ def getInfo():
             else:
                 # Simply tell the user that the login was unsuccessful
                 flash('Login Unsuccessful, Try Again.', 'danger')
-    # This section here tells the app to send the user the home page when they connect to our website, it also sets up some things
-    return render_template('home.html', title = 'Login', formData=form['contextData'], formPassword=form['ldappassword'], form=login)
+    # This section here tells the app to send the user the home page when they connect to our website
+    return render_template('home.html', title = 'Login', form=login)
 
 # Decorator that makes the following function handle the /grades page on the website
 @app.route('/grades')
@@ -201,6 +199,48 @@ def contact():
     # Like the about page, there isn't much we need to do, simply send the contact page
     return render_template('contact.html', title = 'Contact Page')
 
+# Decorator that makes the following function handle the crash page of the website
+@app.route('/crash', methods=['GET', 'POST'])
+# The actual function that handles everything 
+def crashPage():
+    # Check to see if a crash actually happend, its possible that the user just went to this page by typing in the url or they are trying to send multiple crash logs 
+    if not session.get('crash', False) or session.get('sentCrash', False):
+        # Tell them that they can't go here
+        flash('Either you are trying to access this page whitout a crash ocurring or you have already sent a crash message.', 'warning')
+        # Redirect them
+        return redirect(url_for('getInfo'))
+    # Create an instance of the error form and feed it the error form on the page 
+    errorForm = ErrorForm(request.form)
+    # If the user is trying to post which is triggered by the submit button on the error page, continue
+    if request.method == 'POST':
+        # Check if everything's valid
+        if errorForm.validate_on_submit():
+            # Format what the user says
+            info = "ERROR MESSAGE: "+session.get('crash', '----')+"\n\nNAME: "+request.form['name']+"\nEMAIL: "+request.form['email']+"\nCOMMENTS: "+request.form['textbox']+"\n\nGRADE DATA\n"
+            # Add the grade data to the info if the user is ok with it
+            info += str(session.get('gradeData', 'CRASH OCCURED BEFORE GRADE DATA ANALYZED')) if request.form.get('info') else "USER CHOSE NOT TO SHOW"
+            # I'm using a try because it would be very ~interesting if there was a crash on the crash page
+            try:
+                # Connect to the server
+                server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+                # Login
+                server.login('mymcpsplusemailbot@gmail.com', 'aComplexP@ssword')
+                # Send the message
+                server.sendmail('', ['gowdaanuragr@gmail.com'], 'Subject:Error\n\n'+info)
+            # Catch it
+            except Exception as e:
+                # If it fails, there isn't much I can do, so simply just skip over the exception
+                pass
+            # Set the sent crash to being true
+            session['sentCrash'] = True
+            # Tell the user they sent the log successfully
+            flash('You successfully sent crash log! Thanks for helping out!', 'success')
+            # Just set logged in to false so that we can just be sure that they won't get sent to the crash page again
+            session['login'] = False
+            return redirect(url_for('getInfo'))
+    # Send them to the crash page
+    return render_template('crash.html', title = 'Crash Page', form=errorForm, error=session.get('crash'))
+
 # Decorator that makes the following function handle the /logout "page" on the website, not really a page, but...
 @app.route('/logout')
 # Actual function, so this page isn't really an actual page, it just logs the user out pretty much... hence the name 
@@ -215,7 +255,7 @@ def logout():
 # Decorator that is supposed to handle the error 404 which is for pages that do not exist, so for instance if the user typed some thing random after our domain name (like mymcpsplus.herokuapp.com/blahblahblah), this would handle the error that would occur
 @app.errorhandler(404)
 # Actual function that handles the page not being found
-def pageNotFound():
+def pageNotFound(e):
     # Tell the user they tried to go to a non existent page
     flash('You have entered a url that does not exist! You have been redirected.', 'warning')
     # Redirect them to the login page
@@ -224,9 +264,11 @@ def pageNotFound():
 # Decorator that handles the error 500 which is an internal server error, which is a pretty general error where something goes wrong, but the website doesn't really know what caused the crash
 @app.errorhandler(500)
 # Actual function
-def crash():
-    # Return a page with a crash message
-    return render_template('crash.html', title = 'Crash Page')
+def crash(e):
+    # Store the crash message in the session
+    session['crash'] = str(e)
+    # Return to the page with a crash message
+    return redirect(url_for('crashPage'))
 
 # Decorator that deals with the error 410, this is used for data that goes missing on the server for various reasons, I put this in just in case, but I don't think it will ever trigger
 @app.errorhandler(410)

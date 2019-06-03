@@ -1,4 +1,59 @@
 {% extends "layout.html" %}
 {% block content %}
-    Either the server is overloaded or there was an error that ocurred on the server!
+    <div class="col-md-6 offset-md-3 info">
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">OOPS! Something went wrong!</h4>
+            <p>It seems as though a problem occurred which caused the website to unexpectedly crash, the error that occured was:<br><b>{{error}}</b></p>
+            <hr>
+            <p class="mb-0">To notify the developer about this, and/or add extra information, fill out the form below. Keep in mind, none of the following fields are required, you may simply fill out one of the following feilds, or none of them, which simply sends the crash message to the developer. <u>It is suggested to at least <b>hit the send report button</b> so that the developer will be notified.</u></p>
+        </div>
+        <form method="POST" action='\crash' class="error-form">
+            {{ form.csrf_token }}
+            <fieldset class="form-group">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        {{ form.name.label(class="form-control-label") }} 
+                        {% if form.name.errors %}
+                            {{ form.name(class="form-control is-invalid", id = 'flash')}}
+                            <div class="invalid-feedback" id = 'flash'>
+                                    <span>Field must be less than 20 characters long.</span>
+                            </div>
+                        {% else %}
+                            {{ form.name(class="form-control")}}
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ form.email.label(class="form-control-label") }} 
+                        {% if form.email.errors %}
+                            {{ form.email(class="form-control form-control is-invalid", id = 'flash')}}
+                            <div class="invalid-feedback" id = 'flash'>
+                                    <span>{{ form.email.errors[0] }}</span>
+                            </div>
+                        {% else %}
+                            {{ form.email(class="form-control")}}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form.textbox.label(class="form-control-label") }}
+                    {% if form.textbox.errors %}
+                        {{ form.textbox(class="form-control is-invalid", id = 'flash')}}
+                        <div class="invalid-feedback" id = 'flash'>
+                            <span>Field must be less than 1000 characters long.</span>
+                        </div>
+                    {% else %}
+                        {{ form.textbox(class="form-control", rows="5") }}
+                    {% endif %}
+                </div>
+                <p>Check the following text box if you wish to send your grade info to help with debugging this problem (this would be a huge help :D)</p>
+                <div class="d-flex justify-content-between">
+                    <div class="form-check">
+                        {{ form.info(class="form-check-input", id="info") }}
+                        {{ form.info.label(class="form-check-label") }}
+                    </div>
+                    {{ form.submit(class="btn btn-outline-info", id='sendReport') }} 
+                </div>
+            </fieldset>
+        </form>
+    </div>
 {% endblock content %}
