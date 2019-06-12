@@ -93,7 +93,6 @@ function updateGrades(){
             if ($(this).text() == type){
                 // Set the grade and the percent to what they should be, also add the proper button class, which is simply the color of the button 
                 $(this).closest('tr').find('button').removeClass().text(grade+' - '+percent).addClass('btn btn-'+btn+' gradeLetter')
-                alert()
                 // Also, change the number in the "points" column to match the actual grade
                 $(this).closest('tr').find('.headerInfo').text(String(colOne)+'/'+String(colTwo))
             }
