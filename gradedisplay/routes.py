@@ -22,6 +22,9 @@ form = {x.attrib["name"]: x.attrib["value"] for x in hidden_inputs}
 sess = Session()
 sess.init_app(app)
 
+# I could probably do this in a differnt way where I figure out if its summer based on the result from the sever, but I think that this is probably simpler, its just that I will have to manually edit it (only once a year tho)
+summer_break = True
+
 # Load data function 
 def load_data(form):
     '''This function handles the data loading of the program, the input "form" is what the user entered on the login form. All the data is loaded as soon as the user enters vaild credentials'''
@@ -118,20 +121,15 @@ def getInfo():
         flash('You are already logged in!', 'success')
         # Redirect the user to the grade page 
         return redirect(url_for('grades'))
+    # Check if its summer break
+    if summer_break:
+        return redirect(url_for('summer'))
     # Create an instance of the class login form and feed it the login form on the page 
     login = LoginForm(request.form)
     # If the user is trying to post which is triggered by the submit button on the login page, continue
     if request.method == 'POST':
-        # If they entered the special login that allows them to just see a "demo" we continue
-        if request.form['username'] == 'example' and request.form['password'] == 'password':
-            # Set the session login to true so that we can tell the user has logged on while the session is still active
-            session['login'] = True
-            # Also in the session, create a grade data variable and assign it the dummy example data 
-            session['gradeData'] = [['0','0'],['Class1','A',100.0,'Teacher1','teacher1@mcpsmd.org','0','01'],[[{'Id':0,'CategoryGrade':'A','Description':'Category1(34)','OrganizationId':0,'Percent':100.0,'PointsEarned':'100.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'A','Missing':'0','Percent':'','Points':'100.0'},{}]],['Class2','B',80.0,'Teacher2','teacher2@mcpsmd.org','0','02'],[[{'Id':0,'CategoryGrade':'B','Description':'Category1(34)','OrganizationId':0,'Percent':80.0,'PointsEarned':'80.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'B','Missing':'0','Percent':'','Points':'80.0'},{}]],['Class3','C',70.0,'Teacher3','teacher3@mcpsmd.org','0','03'],[[{'Id':0,'CategoryGrade':'C','Description':'Category1(34)','OrganizationId':0,'Percent':70.0,'PointsEarned':'70.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'C','Missing':'0','Percent':'','Points':'70.0'},{}]],['Class4','D',60.0,'Teacher4','teacher4@mcpsmd.org','0','04'],[[{'Id':0,'CategoryGrade':'A','Description':'Category1(34)','OrganizationId':0,'Percent':60.0,'PointsEarned':'60.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'D','Missing':'0','Percent':'','Points':'60.0'},{}]],['Class5','E',50.0,'Teacher5','teacher5@mcpsmd.org','0','05'],[[{'Id':0,'CategoryGrade':'E','Description':'Category1(34)','OrganizationId':0,'Percent':50.0,'PointsEarned':'50.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'E','Missing':'0','Percent':'','Points':'50.0'},{}]]]
-            # Redirect them to the grades page 
-            return redirect(url_for('grades'))
         # If they credentials that they entered into the form are valid then we can do stuff with them
-        elif login.validate_on_submit():
+        if login.validate_on_submit():
             # Fill in some of the form fields of the form that we created at the beginning of the program, so that the form is complete when we post the data to MyMCPS
             form['account'], form['ldappassword'], form['pw'] = request.form['username'], request.form['password'], '0'
             # Store the output of the load_data function in data when we send the form to the fucntion
@@ -153,14 +151,36 @@ def getInfo():
     # This section here tells the app to send the user the home page when they connect to our website
     return render_template('home.html', title = 'Login', form=login)
 
+# Decorator to make the following function handle the /summer 
+@app.route('/summer')
+# Actual function
+def summer():
+    # Check if it's actually summer, the use could've just entered it into the url
+    if not summer_break:
+        # If its not summer, we return them to the login screen
+        return redirect(url_for('getInfo'))
+    # Return the html template if it is
+    return render_template('break.html', path=os.getcwd())
+
+# I just made a demonstrate feature for summer since I disabled the login feature, so normally, dutring the school year to see this, you would have to actually type in the keywords
+@app.route('/dem')
+# This is the function, and honestly, I'm going to allow the user to go here just by typing it in the url, so it'l be easier
+def dem():
+    # Set the session login to true so that we can tell the user has logged on while the session is still active
+    session['login'] = True
+    # Also in the session, create a grade data variable and assign it the dummy example data 
+    session['gradeData'] = [['0','0'],['Class1','A',100.0,'Teacher1','teacher1@mcpsmd.org','0','01'],[[{'Id':0,'CategoryGrade':'A','Description':'Category1(34)','OrganizationId':0,'Percent':100.0,'PointsEarned':'100.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'A','Missing':'0','Percent':'','Points':'100.0'},{}]],['Class2','B',80.0,'Teacher2','teacher2@mcpsmd.org','0','02'],[[{'Id':0,'CategoryGrade':'B','Description':'Category1(34)','OrganizationId':0,'Percent':80.0,'PointsEarned':'80.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'B','Missing':'0','Percent':'','Points':'80.0'},{}]],['Class3','C',70.0,'Teacher3','teacher3@mcpsmd.org','0','03'],[[{'Id':0,'CategoryGrade':'C','Description':'Category1(34)','OrganizationId':0,'Percent':70.0,'PointsEarned':'70.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'C','Missing':'0','Percent':'','Points':'70.0'},{}]],['Class4','D',60.0,'Teacher4','teacher4@mcpsmd.org','0','04'],[[{'Id':0,'CategoryGrade':'A','Description':'Category1(34)','OrganizationId':0,'Percent':60.0,'PointsEarned':'60.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'D','Missing':'0','Percent':'','Points':'60.0'},{}]],['Class5','E',50.0,'Teacher5','teacher5@mcpsmd.org','0','05'],[[{'Id':0,'CategoryGrade':'E','Description':'Category1(34)','OrganizationId':0,'Percent':50.0,'PointsEarned':'50.0','PointsPossible':'100.0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'34.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category2(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{'Id':0,'CategoryGrade':'NG','Description':'Category3(33)','OrganizationId':0,'Percent':0,'PointsEarned':'0','PointsPossible':'0','SectionId':'0','StudentId':0,'TermId':'MP4','Weight':'33.000'},{}],[{'Id':0,'AssignedDate':'2019-04-1100:00:00.0','AssignmentId':'0','AssignmentType':'Category1(34)','Description':'ExampleDescription','DueDate':'2019-04-1100:00:00.0','Note':'','Possible':'100','SectionId':'77373202','Weight':'','Grade':'E','Missing':'0','Percent':'','Points':'50.0'},{}]]]
+    # Redirect them to the grades page 
+    return redirect(url_for('grades'))
+
 # Decorator that makes the following function handle the /grades page on the website
 @app.route('/grades')
 # The actual function handling the grade page
 def grades():
     # If the user hasn't logged on we continue
     if not session.get('login', False):
-        # Tell them that they haaven't logged on
-        flash('You haven\'t logged in, please log in first!', 'danger')
+        # Tell them that they haaven't logged on, but check to see it's not summer first
+        if not summer_break:flash('You haven\'t logged in, please log in first!', 'danger')
         # Redirect them to the login page
         return redirect(url_for('getInfo'))
     # If they werent redirected, then the following code will run, first we intialize a list     
