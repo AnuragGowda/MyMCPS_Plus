@@ -17,7 +17,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 # Active sessions for the app
 Session(app)
 # Same with SSL connections, this also tries to force an SSL connection
-SSLify(app)
+#SSLify(app)
 
 # Import the routes here 
 from gradedisplay import routes

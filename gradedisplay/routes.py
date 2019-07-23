@@ -8,8 +8,13 @@ from flask import render_template, url_for, request, flash, redirect, make_respo
 from flask_session import Session
 # Import other useful stuff
 import requests, lxml.html, json, os, time, smtplib
-# For something later
+# Other stuff that will be used later
 import platform
+import os, base64
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.backends import default_backend
+from cryptography.fernet import Fernet
 
 # Create an instance of a request object
 s = requests.session()
@@ -118,7 +123,7 @@ def cleanSessionData():
 def getInfo():
     '''login page for the website'''
     # Before doing anything, we check to see if there is already current session data, we check to see if the user has already logged in
-    if session.get('login', False):
+    if session.gt('login', False):
         # Tell the user that they have already logged in
         flash('You are already logged in!', 'success')
         # Redirect the user to the grade page 
@@ -162,7 +167,7 @@ def summer():
         # If its not summer, we return them to the login screen
         return redirect(url_for('getInfo'))
     # Return the html template if it is
-    return render_template('break.html', path=os.getcwd(), type=platform.platform())
+    return render_template('break.html')
 
 # I just made a demonstrate feature for summer since I disabled the login feature, so normally, dutring the school year to see this, you would have to actually type in the keywords
 @app.route('/dem')
@@ -245,8 +250,13 @@ def crashPage():
             try:
                 # Connect to the server
                 server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-                # Login
-                server.login('mymcpsplusemailbot@gmail.com', 'aComplexP@ssword')
+                # Login, I need the password here since I deploy it from github to Heroku, but I don't want to keep it in plain text
+                kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32,salt=os.urandom(16), iterations=100000, backend=default_backend())
+                cmpString = os.getcwd()+platform.platform()
+                cmpString.encode('utf-8')
+                key = base64.urlsafe_b64encode(kdf.derive(cmpString))
+                f = Fernet(key)
+                server.login('mymcpsplusemailbot@gmail.com', f.decrypt(b'gAAAAABdN4lVTSlI-1l2q61oPncSi2gU3_RneJQbL8mWN9LOdoWTWbwswLDaQWUX9J2x7F2nhntniVCwq586ERQ8ELRFRFGmLBBP9VTgfmapC9Zxdg7jS88='))
                 # Send the message
                 server.sendmail('', ['gowdaanuragr@gmail.com'], 'Subject:Error\n\n'+info)
             # Catch it
