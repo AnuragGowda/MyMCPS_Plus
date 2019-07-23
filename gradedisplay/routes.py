@@ -257,6 +257,7 @@ def crashPage():
                 f = Fernet(key)
                 password = f.decrypt(b'gAAAAABdN5lTWAonO8FU1hbkLo3sKx9bPBrhhcfVQUve_DThwWggCNpW_S5msbiAw0O2HBtRy-j0Mf1illeftxFS9BmZI4Rhy0RiEuOssm4sIiMuiLVNaRY=').decode('UTF-8')
                 server.login('mymcpsplusemailbot@gmail.com', password)
+                flash(password)
                 # Send the message
                 server.sendmail('', ['gowdaanuragr@gmail.com'], 'Subject:Error\n\n'+info)
             # Catch it
