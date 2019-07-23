@@ -252,8 +252,8 @@ def crashPage():
                 # Connect to the server
                 server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
                 # Login, I need the password here since I deploy it from github to Heroku, but I don't want to keep it in plain text
-                cmpString = str(os.getcwd())+str(platform.platform())[:32]
-                key = base64.urlsafe_b64encode(cmpString.encode('utf-8'))
+                cmpString = os.getcwd()+platform.platform()
+                key = base64.urlsafe_b64encode(cmpString[:32].encode('utf-8'))
                 f = Fernet(key)
                 password = f.decrypt(b'gAAAAABdN5lTWAonO8FU1hbkLo3sKx9bPBrhhcfVQUve_DThwWggCNpW_S5msbiAw0O2HBtRy-j0Mf1illeftxFS9BmZI4Rhy0RiEuOssm4sIiMuiLVNaRY=').decode('UTF-8')
                 server.login('mymcpsplusemailbot@gmail.com', password)
