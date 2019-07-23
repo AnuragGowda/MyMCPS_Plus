@@ -251,14 +251,17 @@ def crashPage():
                 # Connect to the server
                 server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
                 # Login, I need the password here since I deploy it from github to Heroku, but I don't want to keep it in plain text
-                kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32,salt=os.urandom(16), iterations=100000, backend=default_backend())
-                cmpString = os.getcwd()+platform.platform()
-                cmpString.encode('utf-8')
-                key = base64.urlsafe_b64encode(kdf.derive(cmpString))
-                f = Fernet(key)
-                server.login('mymcpsplusemailbot@gmail.com', f.decrypt(b'gAAAAABdN4lVTSlI-1l2q61oPncSi2gU3_RneJQbL8mWN9LOdoWTWbwswLDaQWUX9J2x7F2nhntniVCwq586ERQ8ELRFRFGmLBBP9VTgfmapC9Zxdg7jS88='))
-                # Send the message
-                server.sendmail('', ['gowdaanuragr@gmail.com'], 'Subject:Error\n\n'+info)
+                try:
+                    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32,salt=os.urandom(16), iterations=100000, backend=default_backend())
+                    cmpString = os.getcwd()+platform.platform()
+                    cmpString.encode('utf-8')
+                    key = base64.urlsafe_b64encode(kdf.derive(cmpString))
+                    f = Fernet(key)
+                    server.login('mymcpsplusemailbot@gmail.com', f.decrypt(b'gAAAAABdN4lVTSlI-1l2q61oPncSi2gU3_RneJQbL8mWN9LOdoWTWbwswLDaQWUX9J2x7F2nhntniVCwq586ERQ8ELRFRFGmLBBP9VTgfmapC9Zxdg7jS88='))
+                    # Send the message
+                    server.sendmail('', ['gowdaanuragr@gmail.com'], 'Subject:Error\n\n'+info)
+                except Exception as e:
+                    flash(e, 'danger')
             # Catch it
             except Exception as e:
                 # If it fails, there isn't much I can do, so simply just skip over the exception
