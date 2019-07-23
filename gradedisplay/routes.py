@@ -130,8 +130,7 @@ def getInfo():
         return redirect(url_for('grades'))
     # Check if its summer break
     if summer_break:
-        session['crash'] = True
-        return redirect(url_for('crashPage'))
+        return redirect(url_for('summer'))
     # Create an instance of the class login form and feed it the login form on the page 
     login = LoginForm(request.form)
     # If the user is trying to post which is triggered by the submit button on the login page, continue
