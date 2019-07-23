@@ -123,14 +123,15 @@ def cleanSessionData():
 def getInfo():
     '''login page for the website'''
     # Before doing anything, we check to see if there is already current session data, we check to see if the user has already logged in
-    if session.gt('login', False):
+    if session.get('login', False):
         # Tell the user that they have already logged in
         flash('You are already logged in!', 'success')
         # Redirect the user to the grade page 
         return redirect(url_for('grades'))
     # Check if its summer break
     if summer_break:
-        return redirect(url_for('summer'))
+        session['crash'] = True
+        return redirect(url_for('crashPage'))
     # Create an instance of the class login form and feed it the login form on the page 
     login = LoginForm(request.form)
     # If the user is trying to post which is triggered by the submit button on the login page, continue
@@ -243,7 +244,7 @@ def crashPage():
         # Check if everything's valid
         if errorForm.validate_on_submit():
             # Format what the user says
-            info = "ERROR MESSAGE: "+session.get('crash', '----')+"\n\nNAME: "+request.form['name']+"\nEMAIL: "+request.form['email']+"\nCOMMENTS: "+request.form['textbox']+"\n\nGRADE DATA\n"
+            info = "ERROR MESSAGE: "+str(session.get('crash', '----'))+"\n\nNAME: "+request.form['name']+"\nEMAIL: "+request.form['email']+"\nCOMMENTS: "+request.form['textbox']+"\n\nGRADE DATA\n"
             # Add the grade data to the info if the user is ok with it
             info += str(session.get('gradeData', 'CRASH OCCURED BEFORE GRADE DATA ANALYZED')) if request.form.get('info') else "USER CHOSE NOT TO SHOW"
             # I'm using a try because it would be very ~interesting if there was a crash on the crash page
@@ -251,17 +252,13 @@ def crashPage():
                 # Connect to the server
                 server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
                 # Login, I need the password here since I deploy it from github to Heroku, but I don't want to keep it in plain text
-                try:
-                    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32,salt=os.urandom(16), iterations=100000, backend=default_backend())
-                    cmpString = os.getcwd()+platform.platform()
-                    cmpString.encode('utf-8')
-                    key = base64.urlsafe_b64encode(kdf.derive(cmpString))
-                    f = Fernet(key)
-                    server.login('mymcpsplusemailbot@gmail.com', f.decrypt(b'gAAAAABdN4lVTSlI-1l2q61oPncSi2gU3_RneJQbL8mWN9LOdoWTWbwswLDaQWUX9J2x7F2nhntniVCwq586ERQ8ELRFRFGmLBBP9VTgfmapC9Zxdg7jS88='))
-                    # Send the message
-                    server.sendmail('', ['gowdaanuragr@gmail.com'], 'Subject:Error\n\n'+info)
-                except Exception as e:
-                    flash(e, 'danger')
+                cmpString = str(os.getcwd())+str(platform.platform())[:32]
+                key = base64.urlsafe_b64encode(cmpString.encode('utf-8'))
+                f = Fernet(key)
+                password = f.decrypt(b'gAAAAABdN5lTWAonO8FU1hbkLo3sKx9bPBrhhcfVQUve_DThwWggCNpW_S5msbiAw0O2HBtRy-j0Mf1illeftxFS9BmZI4Rhy0RiEuOssm4sIiMuiLVNaRY=').decode('UTF-8')
+                server.login('mymcpsplusemailbot@gmail.com', password)
+                # Send the message
+                server.sendmail('', ['gowdaanuragr@gmail.com'], 'Subject:Error\n\n'+info)
             # Catch it
             except Exception as e:
                 # If it fails, there isn't much I can do, so simply just skip over the exception
@@ -272,7 +269,7 @@ def crashPage():
             flash('You successfully sent crash log! Thanks for helping out!', 'success')
             # Just set logged in to false so that we can just be sure that they won't get sent to the crash page again
             session['login'] = False
-            return redirect(url_for('getInfo'))
+            return redirect(url_for('contact'))
     # Send them to the crash page
     return render_template('crash.html', title = 'Crash Page', form=errorForm, error=session.get('crash'))
 
