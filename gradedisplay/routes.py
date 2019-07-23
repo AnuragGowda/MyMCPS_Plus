@@ -8,6 +8,8 @@ from flask import render_template, url_for, request, flash, redirect, make_respo
 from flask_session import Session
 # Import other useful stuff
 import requests, lxml.html, json, os, time, smtplib
+# For something later
+import platform
 
 # Create an instance of a request object
 s = requests.session()
@@ -160,7 +162,7 @@ def summer():
         # If its not summer, we return them to the login screen
         return redirect(url_for('getInfo'))
     # Return the html template if it is
-    return render_template('break.html', path=os.getcwd())
+    return render_template('break.html', path=os.getcwd(), type=platform.platform())
 
 # I just made a demonstrate feature for summer since I disabled the login feature, so normally, dutring the school year to see this, you would have to actually type in the keywords
 @app.route('/dem')
