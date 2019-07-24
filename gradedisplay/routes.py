@@ -187,9 +187,13 @@ def grades():
     # If the user hasn't logged on we continue
     if not session.get('login', False):
         # Tell them that they haaven't logged on, but check to see it's not summer first
-        if not summer_break:flash('You haven\'t logged in, please log in first!', 'danger')
-        # Redirect them to the login page
-        return redirect(url_for('getInfo'))
+        if not summer_break:
+            flash('You haven\'t logged in, please log in first!', 'danger')
+            # Redirect them to the login page
+            return redirect(url_for('getInfo'))
+        else:
+            # Otherwise, return them to the summer screen
+            return redirect(url_for('summer'))
     # If they werent redirected, then the following code will run, first we intialize a list     
     overallInfo = []
     # We iterate through the amount of periods that the user has
@@ -235,7 +239,7 @@ def crashPage():
         # Tell them that they can't go here
         flash('Either you are trying to access this page whitout a crash ocurring or you have already sent a crash message.', 'warning')
         # Redirect them
-        return redirect(url_for('getInfo'))
+        return redirect(url_for('getInfo')) if not session.get('login', False) else redirect(url_for('grades'))
     # Create an instance of the error form and feed it the error form on the page 
     errorForm = ErrorForm(request.form)
     # If the user is trying to post which is triggered by the submit button on the error page, continue
@@ -250,11 +254,12 @@ def crashPage():
             try:
                 # Connect to the server
                 server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-                # Login, I need the password here since I deploy it from github to Heroku, but I don't want to keep it in plain text
+                # Login, I need the password here since I deploy it from github to Heroku, but I don't want to keep it in plain text, so I thought of a pretty smart way to keep it hidden from you guys :D
                 cmpString = os.getcwd()+platform.platform()
                 key = base64.urlsafe_b64encode(cmpString[:32].encode('utf-8'))
                 f = Fernet(key)
                 password = f.decrypt(b'gAAAAABdN5lTWAonO8FU1hbkLo3sKx9bPBrhhcfVQUve_DThwWggCNpW_S5msbiAw0O2HBtRy-j0Mf1illeftxFS9BmZI4Rhy0RiEuOssm4sIiMuiLVNaRY=').decode('UTF-8')
+                # Login to gmail
                 server.login('mymcpsplusemailbot@gmail.com', password)
                 # Send the message
                 server.sendmail('', ['gowdaanuragr@gmail.com'], 'Subject:Error\n\n'+info)
@@ -281,7 +286,7 @@ def logout():
     # Tell the user they have been logged out
     flash('You have been logged out!', 'info')
     # Finally, redirect them to the login page
-    return redirect(url_for('getInfo'))
+    return redirect(url_for('getInfo')) if not session.get('login', False) else redirect(url_for('grades'))
 
 # Decorator that is supposed to handle the error 404 which is for pages that do not exist, so for instance if the user typed some thing random after our domain name (like mymcpsplus.herokuapp.com/blahblahblah), this would handle the error that would occur
 @app.errorhandler(404)
@@ -290,7 +295,7 @@ def pageNotFound(e):
     # Tell the user they tried to go to a non existent page
     flash('You have entered a url that does not exist! You have been redirected.', 'warning')
     # Redirect them to the login page
-    return redirect(url_for('getInfo'))
+    return redirect(url_for('getInfo')) if not session.get('login', False) else redirect(url_for('grades'))
 
 # Decorator that handles the error 500 which is an internal server error, which is a pretty general error where something goes wrong, but the website doesn't really know what caused the crash
 @app.errorhandler(500)
@@ -308,4 +313,4 @@ def deletedInfo():
     # Tell the user that a problem has occurred 
     flash('It seems that the data you are trying to access has been mysteriously deleted or changed! If this problem persists, contact the creator of this website.', 'danger')
     # Redirect them to the homepage
-    return redirect(url_for('getInfo'))
+    return redirect(url_for('getInfo')) if not session.get('login', False) else redirect(url_for('grades'))
