@@ -1,2 +1,3 @@
-# MyMCPS_Plus
-More detail coming soon
+# MyMCPS Plus 
+More details coming soon... 
+I was thinking that maybe I should explain how I created this website here or something, because how to use it is self explanatory.
