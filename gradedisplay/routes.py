@@ -47,7 +47,6 @@ def load_data(form):
             break
     # If even after the 3 attempts, it is found the credentials are invalid, exit this function (return None)
     if response.text.find('root.schoolId') == -1:
-        flash('FAIL', 'Danger')
         return
     # However, if it is found that the user entered valid data, we need to get that data and format in a way that suits us
     else:
@@ -141,9 +140,12 @@ def getInfo():
             # Fill in some of the form fields of the form that we created at the beginning of the program, so that the form is complete when we post the data to MyMCPS
             form['account'], form['ldappassword'], form['pw'] = request.form['username'], request.form['password'], '0'
             # Store the output of the load_data function in data when we send the form to the fucntion
+            flash('CHECKPOINT 1', 'info')
             data = load_data(form)
+            flash('CHECKPOINT 2', 'info')
             # If there actually is data, remember that the function returns none when the credentials are invalid, we need to set up some things
             if data:
+                flash('CHECKPOINT 3', 'info')
                 # Set the session grade data to the data returned by the function
                 session['gradeData'] = data
                 # Set the session login variable to true
@@ -195,6 +197,7 @@ def grades():
         else:
             # Otherwise, return them to the summer screen
             return redirect(url_for('summer'))
+    flash('CHECKPOINT 4', 'info')
     # If they werent redirected, then the following code will run, first we intialize a list     
     overallInfo = []
     # We iterate through the amount of periods that the user has
