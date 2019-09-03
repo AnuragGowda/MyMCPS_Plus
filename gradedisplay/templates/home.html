@@ -4,7 +4,7 @@
     <strong>Desktop Version!</strong> This website may not be fully functional on a mobile device.
 </div>
 <div class="col-md-4 offset-md-4 login-form">
-    <form method="POST" action='\'>
+    <form method="POST" action="{{ url_for('getInfo') }}">
         {{ form.csrf_token }} 
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">Log In</legend>
