@@ -148,7 +148,6 @@ def getInfo():
             # Tell the user they logged in successfully 
             flash('You have been logged in!', 'success')
             # Redirect them to the grades page
-            flash(str(vars(login)), 'info')
             return redirect(url_for('grades'))
         # However, if the function returns none, this code runs
         else:

@@ -7,6 +7,9 @@ from flask_session import Session
 from flask_sslify import SSLify
 # Import the os module
 from os import urandom
+# Import CSRF protection
+from flask_wtf.csrf import CSRFProtect
+
 
 # Create the flask app
 app = Flask(__name__)
@@ -18,6 +21,8 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 # Same with SSL connections, this also tries to force an SSL connection
 #SSLify(app)
+# Activate csrf protection
+csrf = CSRFProtect(app)
 
 # Import the routes here 
 from gradedisplay import routes
