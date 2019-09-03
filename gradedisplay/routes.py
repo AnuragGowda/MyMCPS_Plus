@@ -47,6 +47,7 @@ def load_data(form):
             break
     # If even after the 3 attempts, it is found the credentials are invalid, exit this function (return None)
     if response.text.find('root.schoolId') == -1:
+        flash('FAIL', 'Danger')
         return
     # However, if it is found that the user entered valid data, we need to get that data and format in a way that suits us
     else:
