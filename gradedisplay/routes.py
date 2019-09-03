@@ -132,7 +132,7 @@ def getInfo():
     if summer_break:
         return redirect(url_for('summer'))
     # Create an instance of the class login form and feed it the login form on the page 
-    login = LoginForm(request.form)
+    login = LoginForm()
     # If the user is trying to post which is triggered by the submit button on the login page, continue
     if request.method == 'POST':
         # If they credentials that they entered into the form are valid then we can do stuff with them
