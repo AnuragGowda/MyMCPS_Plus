@@ -121,6 +121,7 @@ def cleanSessionData():
 @app.route('/', methods=['GET', 'POST'])
 # The actual function that handles what to do when the user gets on the website
 def getInfo():
+    flash(app.config['SECRET_KEY'], 'info')
     '''login page for the website'''
     # Before doing anything, we check to see if there is already current session data, we check to see if the user has already logged in
     if session.get('login', False):
