@@ -135,6 +135,7 @@ def getInfo():
     login = LoginForm(request.form)
     # If the user is trying to post which is triggered by the submit button on the login page, continue
     if request.method == 'POST':
+        flash('CHECKPOINT 0', 'info')
         # If they credentials that they entered into the form are valid then we can do stuff with them
         if login.validate_on_submit():
             # Fill in some of the form fields of the form that we created at the beginning of the program, so that the form is complete when we post the data to MyMCPS
