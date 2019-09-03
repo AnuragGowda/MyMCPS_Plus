@@ -132,21 +132,17 @@ def getInfo():
     if summer_break:
         return redirect(url_for('summer'))
     # Create an instance of the class login form and feed it the login form on the page 
-    login = LoginForm(request.form)
+    login = LoginForm()
     # If the user is trying to post which is triggered by the submit button on the login page, continue
     if request.method == 'POST':
-        flash('CHECKPOINT 0', 'info')
         # If they credentials that they entered into the form are valid then we can do stuff with them
         if login.validate_on_submit():
             # Fill in some of the form fields of the form that we created at the beginning of the program, so that the form is complete when we post the data to MyMCPS
             form['account'], form['ldappassword'], form['pw'] = request.form['username'], request.form['password'], '0'
             # Store the output of the load_data function in data when we send the form to the fucntion
-            flash('CHECKPOINT 1', 'info')
             data = load_data(form)
-            flash('CHECKPOINT 2', 'info')
             # If there actually is data, remember that the function returns none when the credentials are invalid, we need to set up some things
             if data:
-                flash('CHECKPOINT 3', 'info')
                 # Set the session grade data to the data returned by the function
                 session['gradeData'] = data
                 # Set the session login variable to true
