@@ -132,7 +132,7 @@ def getInfo():
     if summer_break:
         return redirect(url_for('summer'))
     # Create an instance of the class login form and feed it the login form on the page 
-    login = LoginForm()
+    login = LoginForm(request.form)
     # If the user is trying to post which is triggered by the submit button on the login page, continue
     if request.method == 'POST':
         # If they credentials that they entered into the form are valid then we can do stuff with them
@@ -155,6 +155,8 @@ def getInfo():
             else:
                 # Simply tell the user that the login was unsuccessful
                 flash('Login Unsuccessful, Try Again.', 'danger')
+        else:
+            flash(login, 'info')
     # This section here tells the app to send the user the home page when they connect to our website
     return render_template('home.html', title = 'Login', form=login)
 
