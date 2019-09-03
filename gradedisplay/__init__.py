@@ -22,7 +22,7 @@ app = Flask(__name__)
 cmpString = os.getcwd()+platform.platform()
 key = base64.urlsafe_b64encode(cmpString[:32].encode('utf-8'))
 f = Fernet(key)
-password = f.encrypt('Let\'s make a really cool secret key!').decode('UTF-8')
+password = f.encrypt(b'Let\'s make a really cool secret key!').decode('UTF-8')
 print(password)
 
 # Configure the secret key, which is needed for the application
