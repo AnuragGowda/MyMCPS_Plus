@@ -154,7 +154,7 @@ def getInfo():
             # Simply tell the user that the login was unsuccessful
             flash('Login Unsuccessful, Try Again.', 'danger')
     else:
-        flash(str([login.i for i in dir(login)]), 'info')
+        flash(str(dict(login)), 'info')
     # This section here tells the app to send the user the home page when they connect to our website
     return render_template('home.html', title = 'Login', form=login)
 
