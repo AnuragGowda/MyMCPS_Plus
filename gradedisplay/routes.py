@@ -133,30 +133,28 @@ def getInfo():
         return redirect(url_for('summer'))
     # Create an instance of the class login form and feed it the login form on the page 
     login = LoginForm()
-    # If the user is trying to post which is triggered by the submit button on the login page, continue
-    if request.method == 'POST':
-        # If they credentials that they entered into the form are valid then we can do stuff with them
-        if login.validate():
-            # Fill in some of the form fields of the form that we created at the beginning of the program, so that the form is complete when we post the data to MyMCPS
-            form['account'], form['ldappassword'], form['pw'] = request.form['username'], request.form['password'], '0'
-            # Store the output of the load_data function in data when we send the form to the fucntion
-            data = load_data(form)
-            # If there actually is data, remember that the function returns none when the credentials are invalid, we need to set up some things
-            if data:
-                # Set the session grade data to the data returned by the function
-                session['gradeData'] = data
-                # Set the session login variable to true
-                session['login'] = True
-                # Tell the user they logged in successfully 
-                flash('You have been logged in!', 'success')
-                # Redirect them to the grades page
-                return redirect(url_for('grades'))
-            # However, if the function returns none, this code runs
-            else:
-                # Simply tell the user that the login was unsuccessful
-                flash('Login Unsuccessful, Try Again.', 'danger')
+    # If they credentials that they entered into the form are valid then we can do stuff with them
+    if login.validate_on_submit():
+        # Fill in some of the form fields of the form that we created at the beginning of the program, so that the form is complete when we post the data to MyMCPS
+        form['account'], form['ldappassword'], form['pw'] = request.form['username'], request.form['password'], '0'
+        # Store the output of the load_data function in data when we send the form to the fucntion
+        data = load_data(form)
+        # If there actually is data, remember that the function returns none when the credentials are invalid, we need to set up some things
+        if data:
+            # Set the session grade data to the data returned by the function
+            session['gradeData'] = data
+            # Set the session login variable to true
+            session['login'] = True
+            # Tell the user they logged in successfully 
+            flash('You have been logged in!', 'success')
+            # Redirect them to the grades page
+            return redirect(url_for('grades'))
+        # However, if the function returns none, this code runs
         else:
-            flash(login, 'info')
+            # Simply tell the user that the login was unsuccessful
+            flash('Login Unsuccessful, Try Again.', 'danger')
+    else:
+        flash(login, 'info')
     # This section here tells the app to send the user the home page when they connect to our website
     return render_template('home.html', title = 'Login', form=login)
 
