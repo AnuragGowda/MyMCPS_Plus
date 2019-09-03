@@ -136,7 +136,7 @@ def getInfo():
     # If the user is trying to post which is triggered by the submit button on the login page, continue
     if request.method == 'POST':
         # If they credentials that they entered into the form are valid then we can do stuff with them
-        if login.validate:
+        if login.validate():
             # Fill in some of the form fields of the form that we created at the beginning of the program, so that the form is complete when we post the data to MyMCPS
             form['account'], form['ldappassword'], form['pw'] = request.form['username'], request.form['password'], '0'
             # Store the output of the load_data function in data when we send the form to the fucntion
