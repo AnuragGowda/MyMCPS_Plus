@@ -8,7 +8,7 @@ from flask import render_template, url_for, request, flash, redirect, make_respo
 from flask_session import Session
 # Import other useful stuff
 import requests, lxml.html, json, os, time, smtplib
-# Other stuff that will be used later
+# Other stuff that will be used later, this is to keep the password hidden
 import platform
 import os, base64
 from cryptography.hazmat.primitives import hashes
@@ -153,8 +153,6 @@ def getInfo():
         else:
             # Simply tell the user that the login was unsuccessful
             flash('Login Unsuccessful, Try Again.', 'danger')
-    else:
-        flash(login.errors, 'info')
     # This section here tells the app to send the user the home page when they connect to our website
     return render_template('home.html', title = 'Login', form=login)
 
