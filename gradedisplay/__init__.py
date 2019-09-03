@@ -14,7 +14,7 @@ from flask_wtf.csrf import CSRFProtect
 # Create the flask app
 app = Flask(__name__)
 # Configure the secret key, which is needed for the application
-app.config['SECRET_KEY'] = urandom(24)
+app.config['SECRET_KEY'] = 'asdofhasi0dhfoispafiowneafoiw[dfb'
 # Set the session type to filesystem because the default system won't work for our purposes
 app.config['SESSION_TYPE'] = 'filesystem'
 # Active sessions for the app
