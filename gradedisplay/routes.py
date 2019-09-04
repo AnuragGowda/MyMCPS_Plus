@@ -266,15 +266,14 @@ def crashPage():
                 server.login('mymcpsplusemailbot@gmail.com', password)
                 # Send the message
                 server.sendmail('', ['gowdaanuragr@gmail.com'], 'Subject:Error\n\n'+info)
+                # Tell the user they sent the log successfully
+                flash('You successfully sent crash log! Thanks for helping out!', 'success')
             # Catch it
             except Exception as e:
-                print('-'*100)
                 # If it fails, there isn't much I can do, so simply just skip over the exception
-                print(str(e))
+                flash('Hmmm, there seemed to be an error when trying to sumbit a crash form, the error that occured was: '+str(e), 'info')
             # Set the sent crash to being true
             session['sentCrash'] = True
-            # Tell the user they sent the log successfully
-            flash('You successfully sent crash log! Thanks for helping out!', 'success')
             # Just set logged in to false so that we can just be sure that they won't get sent to the crash page again
             session['login'] = False
             return redirect(url_for('contact'))
