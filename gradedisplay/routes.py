@@ -262,7 +262,6 @@ def crashPage():
                 key = base64.urlsafe_b64encode(cmpString[:32].encode('utf-8'))
                 f = Fernet(key)
                 password = f.decrypt(b'gAAAAABdcB1whSWB_LH2DJidXVoa3yepiF76cpkI08v1TbLTz2A7vCRoaSup4BL5Hu0YvGb8BhtPhqA3gqjVqsIpJaViKqXP-46eEvDaph9QOOSmUJ6Mr30=').decode('UTF-8')
-                flash(password, 'info')
                 # Login to gmail
                 server.login('mymcpsplusemailbot@gmail.com', password)
                 # Send the message
