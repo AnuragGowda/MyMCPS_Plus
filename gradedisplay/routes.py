@@ -58,7 +58,7 @@ def load_data(form):
         # Now we need to keep only the data that we want, so we will loop through the loginData that we just got
         for quarter in range(len(loginData)-1):
             # Here we filter the login data to match only the marking period that we want to show
-            if loginData[quarter]['termid'] == 'MP4':
+            if loginData[quarter]['termid'] == 'MP1':
                 # Now we are looping through each class, we get the more specific information here such as the percent that the user has in the class, and storing it so that we can filter it later
                 basicInfo = s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CourseDetail.json?secid='+loginData[quarter]['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP4').json()  
                 # Now with that information that we received, we want to only store the following - the name of the course, the overall grade, the percent the user has in the class, etc
@@ -75,7 +75,7 @@ def load_data(form):
         if specialData:
             # Here we look at all the users classes again, we look at the data 4 before the end because the last one is usually blank, the two before that are usually counselor and homeroom
             # This could be prone to error however, so I may need to fix it 
-            for period in range(int(loginData[-4]['period'])-1):
+            for period in range(max(int(loginData[-4]['period'])-1, 7)):
                 # Due to how I stored the data, I know how to perform calculations on it to check for certian things, the first clause checks to see that the period isnt outside of the amount of classes stored in gradeInfo, if it is,
                 # then that class might need to be added, also I check to see if the class in gradeInfo isnt matching up with the period, for example, if the period I'm looking for is 1 (meaning period is 0 since I am interating through 
                 # a list that starts from 0 and goes to the last period), then I check to see if the period at the index that should correspond to 1 is in fact 1, and if it is not, then we need to proceed
