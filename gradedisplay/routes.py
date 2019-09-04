@@ -78,7 +78,7 @@ def load_data(form):
             # Get the higest period we have of the special data
             lastSpecialData = int(specialData[-1][6]) if len(specialData) > 0 and isinstance(specialData[-1][6], str) and specialData[-1][6].isdigit() else 0
             # Get the highest period we have of the actual grade data
-            lastGradeData = ''#int(gradeInfo[-2][6]) if len(gradeInfo) >= 2 and isinstance(gradeInfo[-2][6], str) and gradeInfo[-2][6].isdigit() else 0
+            lastGradeData = int(gradeInfo[-2][6]) if len(gradeInfo) >= 2 and isinstance(gradeInfo[-2][6], str) and gradeInfo[-2][6].isdigit() else 0
             # Get the max of these, and run through the range to make sure we have all the periods in between
             for period in range(max(lastSpecialData,lastGradeData,1)):
                 # Due to how I stored the data, I know how to perform calculations on it to check for certian things, the first clause checks to see that the period isnt outside of the amount of classes stored in gradeInfo, if it is,
