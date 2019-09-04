@@ -67,15 +67,20 @@ def load_data(form):
                 # We also get the individual grades, for example a 30/40 on a formative project or 10/10 on a homework, we save these both in our gradeInfo variable 
                 gradeInfo.append([s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CategoryDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP4').json(),s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_AssignmentDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json()])
             # However, we also want to keep track of unlisted marking periods because due to how  MyMCPS works, if a grade isnt entered for a class, there will be no marking period assigned to that class
-            # If the class isnt included, it will cause our program to crash later, therefore it is necesary that we add the classes without grades
-            elif loginData[quarter]['termid'] == '':
+            # If the class isnt included, it will cause our program to crash later, therefore it is necesary that we add the classes without grades, also we need to check that these aren't "fake classes" like counselor
+            elif loginData[quarter]['termid'] == '' and loginData[quarter]['courseName'] not in ['HOMEROOM', 'COUNSELOR', 'MYP RESEARCH SEM']:
                 # Add the course name, and everthing else, this is the same thing we did with the other data
                 specialData.append([loginData[quarter]['courseName'], '', '', loginData[quarter]['teacher'],loginData[quarter]['email_addr'], loginData[quarter]['sectionid'],loginData[quarter]['period']])
-        # If we found special data, this is usually allways true because MCPS usually sends the classes counselor and homeroom along with the grade data, so we need to check the special data to find if it is actually a real class
+        # If we found special data, this is only run when you have a class that doesn't have grades entered, because MCPS won't assign a marking period to them when sending the json over
         if specialData:
-            # Here we look at all the users classes again, we look at the data 4 before the end because the last one is usually blank, the two before that are usually counselor and homeroom
-            # This could be prone to error however, so I may need to fix it 
-            for period in range(max(int(loginData[-4]['period'])-1, 7)):
+            # Here we look at all the users classes again, and we sort them
+            # I fixed this so this shouldn't be able to crash
+            # Get the higest period we have of the special data
+            lastSpecialData = specialData[-1][6] if specialData[-1][6].is_integer() else 0
+            # Get the highest period we have of the actual grade data
+            lastGradeData = gradeInfo[-2][6] if len(gradeInfo) >= 2 and gradeInfo[-2][6].is_integer() else 0
+            # Get the max of these, and run through the range to make sure we have all the periods in between
+            for period in range(max(lastSpecialData,lastGradeData)):
                 # Due to how I stored the data, I know how to perform calculations on it to check for certian things, the first clause checks to see that the period isnt outside of the amount of classes stored in gradeInfo, if it is,
                 # then that class might need to be added, also I check to see if the class in gradeInfo isnt matching up with the period, for example, if the period I'm looking for is 1 (meaning period is 0 since I am interating through 
                 # a list that starts from 0 and goes to the last period), then I check to see if the period at the index that should correspond to 1 is in fact 1, and if it is not, then we need to proceed
