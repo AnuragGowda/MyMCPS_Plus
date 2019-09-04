@@ -259,6 +259,7 @@ def crashPage():
                 server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
                 # Login, I need the password here since I deploy it from github to Heroku, but I don't want to keep it in plain text, so I thought of a pretty smart way to keep it hidden from you guys :D
                 cmpString = os.getcwd()+platform.platform()
+                flash(cmpString)
                 key = base64.urlsafe_b64encode(cmpString[:32].encode('utf-8'))
                 f = Fernet(key)
                 password = f.decrypt(b'gAAAAABdcB1whSWB_LH2DJidXVoa3yepiF76cpkI08v1TbLTz2A7vCRoaSup4BL5Hu0YvGb8BhtPhqA3gqjVqsIpJaViKqXP-46eEvDaph9QOOSmUJ6Mr30=').decode('UTF-8')
