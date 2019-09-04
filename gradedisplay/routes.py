@@ -80,7 +80,7 @@ def load_data(form):
             # Get the highest period we have of the actual grade data
             lastGradeData = gradeInfo[-2][6] if len(gradeInfo) >= 2 and isinstance(gradeInfo[-2][6], int) else 0
             # Get the max of these, and run through the range to make sure we have all the periods in between
-            for period in range(max(lastSpecialData,lastGradeData)):
+            for period in range(max(lastSpecialData,lastGradeData)-1):
                 # Due to how I stored the data, I know how to perform calculations on it to check for certian things, the first clause checks to see that the period isnt outside of the amount of classes stored in gradeInfo, if it is,
                 # then that class might need to be added, also I check to see if the class in gradeInfo isnt matching up with the period, for example, if the period I'm looking for is 1 (meaning period is 0 since I am interating through 
                 # a list that starts from 0 and goes to the last period), then I check to see if the period at the index that should correspond to 1 is in fact 1, and if it is not, then we need to proceed
