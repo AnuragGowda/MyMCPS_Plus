@@ -270,7 +270,7 @@ def crashPage():
             # Catch it
             except Exception as e:
                 # If it fails, there isn't much I can do, so simply just skip over the exception
-                pass
+                flash(e, 'info')
             # Set the sent crash to being true
             session['sentCrash'] = True
             # Tell the user they sent the log successfully
