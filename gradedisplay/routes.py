@@ -76,7 +76,7 @@ def load_data(form):
             # Here we look at all the users classes again, and we sort them
             # I fixed this so this shouldn't be able to crash
             # Get the higest period we have of the special data
-            lastSpecialData = specialData[-1][6] if isinstance(specialData[-1][6], int) else 0
+            lastSpecialData = specialData[-1][6] if len(specialData) > 0 and isinstance(specialData[-1][6], int) else 0
             # Get the highest period we have of the actual grade data
             lastGradeData = gradeInfo[-2][6] if len(gradeInfo) >= 2 and isinstance(gradeInfo[-2][6], int) else 0
             # Get the max of these, and run through the range to make sure we have all the periods in between
