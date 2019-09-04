@@ -22,7 +22,7 @@ app = Flask(__name__)
 cmpString = os.getcwd()+platform.platform()
 key = base64.urlsafe_b64encode(cmpString[:32].encode('utf-8'))
 f = Fernet(key)
-password = f.decrypt(b'gAAAAABdbuMhle4I0kvnQsW3e_TiLxY6ZNb2Ni4s7Eefl-TO9jVWPrQiCdWOSf-V7Lp9MBTjU9VvvufgWqb2K3V2WB3vOZ_UavPsC4Y_wZ9emQSiuodptuUB5asW995PB-u96Yt0V6fW').decode('UTF-8')
+password = f.decrypt(b'gAAAAABdcB4YeK1mF1-HvQCLsm12aBAIvlLZP7TxLZqPZl6JC0M7_YLgUPaZlfaGAZW8OpIsmtL5OMvIjYzliOfn9sWBK1AnZOyHj0zBpL87I1mRsVXuTWI=').decode('UTF-8')
 
 # Configure the secret key, which is needed for the application
 app.config['SECRET_KEY'] = password

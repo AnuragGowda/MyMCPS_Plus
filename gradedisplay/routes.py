@@ -76,11 +76,11 @@ def load_data(form):
             # Here we look at all the users classes again, and we sort them
             # I fixed this so this shouldn't be able to crash
             # Get the higest period we have of the special data
-            lastSpecialData = specialData[-1][6] if len(specialData) > 0 and isinstance(specialData[-1][6], int) else 0
+            lastSpecialData = int(specialData[-1][6]) if len(specialData) > 0 and isinstance(specialData[-1][6], str) and specialData[-1][6].isdigit() else 0
             # Get the highest period we have of the actual grade data
-            lastGradeData = gradeInfo[-2][6] if len(gradeInfo) >= 2 and isinstance(gradeInfo[-2][6], int) else 0
+            lastGradeData = ''#int(gradeInfo[-2][6]) if len(gradeInfo) >= 2 and isinstance(gradeInfo[-2][6], str) and gradeInfo[-2][6].isdigit() else 0
             # Get the max of these, and run through the range to make sure we have all the periods in between
-            for period in range(max(lastSpecialData,lastGradeData)-1):
+            for period in range(max(lastSpecialData,lastGradeData,1)):
                 # Due to how I stored the data, I know how to perform calculations on it to check for certian things, the first clause checks to see that the period isnt outside of the amount of classes stored in gradeInfo, if it is,
                 # then that class might need to be added, also I check to see if the class in gradeInfo isnt matching up with the period, for example, if the period I'm looking for is 1 (meaning period is 0 since I am interating through 
                 # a list that starts from 0 and goes to the last period), then I check to see if the period at the index that should correspond to 1 is in fact 1, and if it is not, then we need to proceed
@@ -259,19 +259,18 @@ def crashPage():
                 server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
                 # Login, I need the password here since I deploy it from github to Heroku, but I don't want to keep it in plain text, so I thought of a pretty smart way to keep it hidden from you guys :D
                 cmpString = os.getcwd()+platform.platform()
-                flash(cmpString,'info')
                 key = base64.urlsafe_b64encode(cmpString[:32].encode('utf-8'))
                 f = Fernet(key)
-                password = f.decrypt(b'gAAAAABdN5lTWAonO8FU1hbkLo3sKx9bPBrhhcfVQUve_DThwWggCNpW_S5msbiAw0O2HBtRy-j0Mf1illeftxFS9BmZI4Rhy0RiEuOssm4sIiMuiLVNaRY=').decode('UTF-8')
-                flash(password, 'info')
+                password = f.decrypt(b'gAAAAABdcB1whSWB_LH2DJidXVoa3yepiF76cpkI08v1TbLTz2A7vCRoaSup4BL5Hu0YvGb8BhtPhqA3gqjVqsIpJaViKqXP-46eEvDaph9QOOSmUJ6Mr30=').decode('UTF-8')
                 # Login to gmail
                 server.login('mymcpsplusemailbot@gmail.com', password)
                 # Send the message
                 server.sendmail('', ['gowdaanuragr@gmail.com'], 'Subject:Error\n\n'+info)
             # Catch it
             except Exception as e:
+                print('-'*100)
                 # If it fails, there isn't much I can do, so simply just skip over the exception
-                flash(e, 'info')
+                print(str(e))
             # Set the sent crash to being true
             session['sentCrash'] = True
             # Tell the user they sent the log successfully
