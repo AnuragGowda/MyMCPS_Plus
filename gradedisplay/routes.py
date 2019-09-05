@@ -152,8 +152,35 @@ def getInfo():
             session['gradeData'] = data
             # Set the session login variable to true
             session['login'] = True
-            # Tell the user they logged in successfully 
-            flash('You have been logged in!', 'success')
+            # I wanted to keep track of how many people were using my website
+            # Open the text file with the ids
+            with open('users.txt', 'a+') as f:
+                # If someone has already used the website
+                if sum(1 for line in open('users.txt')) > 1:
+                    # Tell the reader to look at the beginning of the file
+                    f.seek(0)
+                    # Create a varibale that will be helpful later
+                    found = False
+                    # Enumerate thought
+                    for item in f.read():
+                        # If the item is equal to the users id, it means that they have logged in before
+                        if item.strip() == request.form['username']:
+                            # We found them
+                            found = True
+                            # Welcome the user
+                            flash('Welcome back!', 'success') 
+                    # If we didn't find them in the textfile, then they are new
+                    if not found:
+                        # Add them to the file
+                        f.write(str(request.form['username'])+'\n')
+                        # Welcome the new user
+                        flash('Welcome to MyMCPS++!', 'success')                   
+                # This will run for the first person to use the website, which will be me :)
+                else:
+                    # Add them to the file
+                    f.write(str(request.form['username'])+'\n')
+                    # Welcome the new user
+                    flash('Welcome to MyMCPS++!', 'success')
             # Redirect them to the grades page
             return redirect(url_for('grades'))
         # However, if the function returns none, this code runs
