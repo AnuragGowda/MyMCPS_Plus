@@ -152,8 +152,37 @@ def getInfo():
             session['gradeData'] = data
             # Set the session login variable to true
             session['login'] = True
-            # Tell the user they logged in successfully 
-            flash('You have been logged in!', 'success')
+            # I wanted to keep track of how many people were using my website
+            # Open the text file with the ids
+            with open('users.txt', 'a+') as f:
+                # If someone has already used the website
+                if sum(1 for line in open('users.txt')) > 0:
+                    # Tell the reader to look at the beginning of the file
+                    f.seek(0)
+                    # Create a varibale that will be helpful later
+                    found = False
+                    # Enumerate thought
+                    for item in open('users.txt').read().splitlines():
+                        # If the item is equal to the users id, it means that they have logged in before
+                        if item == request.form['username']:
+                            # We found them
+                            found = True
+                            # Welcome the user
+                            flash('Welcome back!', 'success') 
+                            # Leave the loop
+                            break
+                    # If we didn't find them in the textfile, then they are new
+                    if not found:
+                        # Add them to the file
+                        f.write(str(request.form['username'])+'\n')
+                        # Welcome the new user
+                        flash('Welcome to MyMCPS++!', 'success')                   
+                # This will run for the first person to use the website, which will be me :)
+                else:
+                    # Add them to the file
+                    f.write(str(request.form['username'])+'\n')
+                    # Welcome the new user
+                    flash('Welcome to MyMCPS++!', 'success')
             # Redirect them to the grades page
             return redirect(url_for('grades'))
         # However, if the function returns none, this code runs
@@ -240,6 +269,15 @@ def about():
 def contact():
     # Like the about page, there isn't much we need to do, simply send the contact page
     return render_template('contact.html', title = 'Contact Page')
+
+# Another deocrator
+@app.route('/users')
+# Function
+def users():
+    # Get the total people that have used the website
+    total = sum(1 for line in open('users.txt'))
+    # Send them on their way
+    return render_template('users.html', title = 'Users Page', total = total)
 
 # Decorator that makes the following function handle the crash page of the website
 @app.route('/crash', methods=['GET', 'POST'])
