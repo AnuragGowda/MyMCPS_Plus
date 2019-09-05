@@ -217,7 +217,7 @@ def gradePage(classData):
         # The user probably entered their class data, so tell them not to do that
         flash('Please don\'t try and manipulate the url. If you think this is a mistake, contact the creator of this website.', 'warning')
         # Just redirect them to grades
-        return redirect(url_for('grades')
+        return redirect(url_for('grades'))
     # Again, if they haven't logged in, we determine this by checking a varibale that we stored in the session
     if not session.get('login', False):
         # Alert the user that they haven't logged in 
