@@ -212,7 +212,7 @@ def grades():
 @app.route('/gradePage/<classData>')
 # The actual function, the argument class data is set to whatever is after the /gradePage/ in the url
 def gradePage(classData):
-    flash(len(session.get('gradeData', '')))
+    flash(session.get('gradeData', ''))
     # Again, if they haven't logged in, we determine this by checking a varibale that we stored in the session
     if not session.get('login', False):
         # Alert the user that they haven't logged in 
