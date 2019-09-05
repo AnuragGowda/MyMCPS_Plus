@@ -162,8 +162,7 @@ def getInfo():
                     # Create a varibale that will be helpful later
                     found = False
                     # Enumerate thought
-                    for item in f.readlines():
-                        flash(item)
+                    for item in open('users.txt').read().splitlines():
                         # If the item is equal to the users id, it means that they have logged in before
                         if item.strip() == request.form['username']:
                             # We found them
