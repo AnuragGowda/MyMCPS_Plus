@@ -31,6 +31,8 @@ sess.init_app(app)
 
 # I could probably do this in a differnt way where I figure out if its summer based on the result from the sever, but I think that this is probably simpler, its just that I will have to manually edit it (only once a year tho)
 summer_break = False
+# Same with this, I think that I could figure out how to automate this, but im fine with having to manually edit it each quarter
+marking_period = 'MP1'
 
 # Load data function 
 def load_data(form):
@@ -58,14 +60,14 @@ def load_data(form):
         # Now we need to keep only the data that we want, so we will loop through the loginData that we just got
         for quarter in range(len(loginData)-1):
             # Here we filter the login data to match only the marking period that we want to show
-            if loginData[quarter]['termid'] == 'MP1':
+            if loginData[quarter]['termid'] == marking_period:
                 # Now we are looping through each class, we get the more specific information here such as the percent that the user has in the class, and storing it so that we can filter it later
-                basicInfo = s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CourseDetail.json?secid='+loginData[quarter]['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP1').json()  
+                basicInfo = s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CourseDetail.json?secid='+loginData[quarter]['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid='+marking_period).json()  
                 # Now with that information that we received, we want to only store the following - the name of the course, the overall grade, the percent the user has in the class, etc
                 gradeInfo.append([basicInfo['courseName'], basicInfo['overallgrade'], float(basicInfo['percent']),basicInfo['teacher'],basicInfo['email_addr'], basicInfo['sectionid'], basicInfo['period']])
                 # Now that we have added that info to grade data, we also want to add the actual grades such as the grade categories (for example the formative category with a weight of 40) and the percent that the user has in each category
                 # We also get the individual grades, for example a 30/40 on a formative project or 10/10 on a homework, we save these both in our gradeInfo variable 
-                gradeInfo.append([s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CategoryDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP1').json(),s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_AssignmentDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json()])
+                gradeInfo.append([s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CategoryDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid='+marking_period).json(),s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_AssignmentDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json()])
             # However, we also want to keep track of unlisted marking periods because due to how  MyMCPS works, if a grade isnt entered for a class, there will be no marking period assigned to that class
             # If the class isnt included, it will cause our program to crash later, therefore it is necesary that we add the classes without grades, also we need to check that these aren't "fake classes" like counselor
             elif loginData[quarter]['termid'] == '' and loginData[quarter]['courseName'] not in ['HOMEROOM', 'COUNSELOR', 'MYP RESEARCH SEM']:
@@ -210,6 +212,7 @@ def grades():
 @app.route('/gradePage/<classData>')
 # The actual function, the argument class data is set to whatever is after the /gradePage/ in the url
 def gradePage(classData):
+    flash(len(session.get('gradeData', '')))
     # Again, if they haven't logged in, we determine this by checking a varibale that we stored in the session
     if not session.get('login', False):
         # Alert the user that they haven't logged in 
