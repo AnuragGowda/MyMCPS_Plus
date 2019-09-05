@@ -241,6 +241,13 @@ def contact():
     # Like the about page, there isn't much we need to do, simply send the contact page
     return render_template('contact.html', title = 'Contact Page')
 
+# Another deocrator
+@app.route('/users')
+# Function
+def users():
+    # Send them on their way
+    return render_template('users.html', title = 'Users Page')
+
 # Decorator that makes the following function handle the crash page of the website
 @app.route('/crash', methods=['GET', 'POST'])
 # The actual function that handles everything 

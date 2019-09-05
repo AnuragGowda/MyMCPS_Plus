@@ -10,10 +10,12 @@ $("#submit").click(function() {
 function clearAll(){
     // Remove the about-color, this corresponds to the about button in the header
     document.getElementById("about-color").classList.remove('active');
-    // Remove the grades-color, this corresponds to the about button in the header
+    // Remove the grades-color, this corresponds to the grade button in the header
     document.getElementById("grades-color").classList.remove('active');
-    // Remove the contact-color, this corresponds to the about button in the header
+    // Remove the contact-color, this corresponds to the contact button in the header
     document.getElementById("contact-color").classList.remove('active');
+    // Remove the users-color, this corresponds to the users button in the header
+    document.getElementById("users-color").classList.remove('active');
 }
 
 // When the page loads the following function runs
@@ -34,6 +36,10 @@ $( document ).ready(function() {
     else if (document.title == 'MyMCPS++ - Contact Page'){
         // Make the corresopning header active
         document.getElementById("contact-color").classList.add('active');
+    }
+    else if (document.title == 'MyMCPS++ - Users Page'){
+        // Make the corresopning header active
+        document.getElementById("users-color").classList.add('active');
     }
 });
 
