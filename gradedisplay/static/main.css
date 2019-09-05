@@ -84,4 +84,8 @@ body {
 }
 .users{
     margin-top: 50px;
+    background: #ffffff;
+    padding: 15px 20px 15px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
 }
