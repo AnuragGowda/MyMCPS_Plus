@@ -163,6 +163,7 @@ def getInfo():
                     found = False
                     # Enumerate thought
                     for item in f.read():
+                        flash(item)
                         # If the item is equal to the users id, it means that they have logged in before
                         if item.strip() == request.form['username']:
                             # We found them
