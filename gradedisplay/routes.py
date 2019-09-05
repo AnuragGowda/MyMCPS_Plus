@@ -164,11 +164,13 @@ def getInfo():
                     # Enumerate thought
                     for item in open('users.txt').read().splitlines():
                         # If the item is equal to the users id, it means that they have logged in before
-                        if item.strip() == request.form['username']:
+                        if item == request.form['username']:
                             # We found them
                             found = True
                             # Welcome the user
                             flash('Welcome back!', 'success') 
+                            # Leave the loop
+                            break
                     # If we didn't find them in the textfile, then they are new
                     if not found:
                         # Add them to the file
