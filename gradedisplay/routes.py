@@ -213,7 +213,7 @@ def grades():
 # The actual function, the argument class data is set to whatever is after the /gradePage/ in the url
 def gradePage(classData):
     # The classData could be entered by the user through url manipulation, so we have to check that it is vaild before we try and compute with it, otherwise we may encounter errors
-    if not classData.isdigit() or int(classData) < 0 or (classData+1)*2+1 > len(session.get('gradeData', '')) or session.get('gradeData', '')[(int(classData)+1)*2] == [{},{}]:
+    if not classData.isdigit():# or int(classData) < 0 or (int(classData)+1)*2+1 > len(session.get('gradeData', '')) or session.get('gradeData', '')[(int(classData)+1)*2] == [{},{}]:
         # The user probably entered their class data, so tell them not to do that
         flash('Please don\'t try and manipulate the url. If you think this is a mistake, contact the creator of this website.', 'warning')
         # Just redirect them to grades
