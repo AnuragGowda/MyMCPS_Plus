@@ -1,3 +1,3 @@
 # MyMCPS Plus 
 More details coming soon... 
-I was thinking that maybe I should explain how I created this website here or something, because how to use it is self explanatory.
+I was thinking that maybe I should explain how I created this website here or something, because how to use it is self explanatory. Maybe If I get enough users or people that want to know how I made this website, I'll write a guide that explains how I did it, but for now, I won't as not many people use this.
