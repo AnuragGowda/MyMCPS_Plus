@@ -156,7 +156,7 @@ def getInfo():
             # Open the text file with the ids
             with open('users.txt', 'a+') as f:
                 # If someone has already used the website
-                if sum(1 for line in open('users.txt')) > 1:
+                if sum(1 for line in open('users.txt')) > 0:
                     # Tell the reader to look at the beginning of the file
                     f.seek(0)
                     # Create a varibale that will be helpful later
