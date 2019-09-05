@@ -272,8 +272,10 @@ def contact():
 @app.route('/users')
 # Function
 def users():
+    # Get the total people that have used the website
+    total = sum(1 for line in open('users.txt'))
     # Send them on their way
-    return render_template('users.html', title = 'Users Page')
+    return render_template('users.html', title = 'Users Page', total = total)
 
 # Decorator that makes the following function handle the crash page of the website
 @app.route('/crash', methods=['GET', 'POST'])
