@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
+    <div class="alert alert-warning beta-warning col-md-4 offset-md-4" role="danger">
+        Yeah so this page is broken, I just hotfixed it so that it doesn't crash, I'll fix it soon, and if i can't im just going to take it down
+    </div>
     <div class="col-md-6 offset-md-3 users">
-        <h1 style="text-align:center">Yeah so this page is broken, I just hotfixed it so that it doesn't crash, I'll fix it soon, and if i can't im just going to take it down</h1>
         <p style="text-align:center">This site has a grand total of *drumroll please*<br><h1 style="text-align:center">{{ total }}</h1><p style="text-align:center"><br>users so far!</p>
     </div>
 {% endblock content %}
