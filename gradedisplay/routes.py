@@ -275,10 +275,10 @@ def contact():
 # Function
 def users():
     # Get the total people that have used the website
-    try:
-        total = sum(1 for line in open('users.txt'))
-    except:
-        total = 2
+    #try:
+    total = sum(1 for line in open('users.txt'))
+    #except:
+    #    total = 2
     # Send them on their way
     return render_template('users.html', title = 'Users Page', total = total)
 
