@@ -1,3 +1,10 @@
+// Because of some problems I needed to keep my app awake at all times so I got this code here: https://quickleft.com/blog/6-easy-ways-to-prevent-your-heroku-node-app-from-sleeping/
+// Its pretty simple stuff but I just wanted to give the site some credit
+var http = require("http");
+setInterval(function() {
+    http.get("http://<your app name>.herokuapp.com");
+}, 300000); // every 5 minutes (300000)
+
 // The easy stuff first 
 
 // When the submit button is clicked
