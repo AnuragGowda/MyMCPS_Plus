@@ -8,13 +8,6 @@ from flask import render_template, url_for, request, flash, redirect, make_respo
 from flask_session import Session
 # Import other useful stuff
 import requests, lxml.html, json, os, time, smtplib
-# Other stuff that will be used later, this is to keep the password hidden
-import platform
-import os, base64
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.backends import default_backend
-from cryptography.fernet import Fernet
 
 # Create an instance of a request object
 s = requests.session()
