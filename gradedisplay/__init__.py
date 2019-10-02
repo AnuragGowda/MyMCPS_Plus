@@ -18,14 +18,8 @@ from cryptography.fernet import Fernet
 # Create the flask app
 app = Flask(__name__)
 
-# Do crypto stuff to make the user not know what the secret key is
-cmpString = os.getcwd()+platform.platform()
-key = base64.urlsafe_b64encode(cmpString[:32].encode('utf-8'))
-f = Fernet(key)
-password = f.decrypt(b'gAAAAABdcB4YeK1mF1-HvQCLsm12aBAIvlLZP7TxLZqPZl6JC0M7_YLgUPaZlfaGAZW8OpIsmtL5OMvIjYzliOfn9sWBK1AnZOyHj0zBpL87I1mRsVXuTWI=').decode('UTF-8')
-
 # Configure the secret key, which is needed for the application
-app.config['SECRET_KEY'] = password
+app.config['SECRET_KEY'] = 'password'
 # Set the session type to filesystem because the default system won't work for our purposes
 app.config['SESSION_TYPE'] = 'filesystem'
 # Active sessions for the app
