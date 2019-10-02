@@ -7,13 +7,6 @@ from flask_session import Session
 from os import urandom
 # Import CSRF protection
 from flask_wtf.csrf import CSRFProtect
-# Import crypto stuff to keep the secret key hidden, I did this with the email password too
-import platform
-import os, base64
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.backends import default_backend
-from cryptography.fernet import Fernet
 
 # Create the flask app
 app = Flask(__name__)
