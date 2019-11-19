@@ -25,7 +25,7 @@ sess.init_app(app)
 # I could probably do this in a differnt way where I figure out if its summer based on the result from the sever, but I think that this is probably simpler, its just that I will have to manually edit it (only once a year tho)
 summer_break = False
 # Same with this, I think that I could figure out how to automate this, but im fine with having to manually edit it each quarter
-marking_period = 'MP1'
+marking_period = 'MP2'
 
 # Load data function 
 def load_data(form):
