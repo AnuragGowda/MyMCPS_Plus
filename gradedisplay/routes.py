@@ -63,7 +63,7 @@ def load_data(form):
                 gradeInfo.append([s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CategoryDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid='+marking_period).json(),s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_AssignmentDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json()])
             # However, we also want to keep track of unlisted marking periods because due to how  MyMCPS works, if a grade isnt entered for a class, there will be no marking period assigned to that class
             # If the class isnt included, it will cause our program to crash later, therefore it is necesary that we add the classes without grades, also we need to check that these aren't "fake classes" like counselor
-            elif loginData[quarter]['termid'] == '' and loginData[quarter]['courseName'] not in ['HOMEROOM', 'COUNSELOR', 'MYP RESEARCH SEM']:
+            elif loginData[quarter]['termid'] != marking_period and loginData[quarter]['courseName'] not in ['HOMEROOM', 'COUNSELOR', 'MYP RESEARCH SEM']:
                 # Add the course name, and everthing else, this is the same thing we did with the other data
                 specialData.append([loginData[quarter]['courseName'], '', '', loginData[quarter]['teacher'],loginData[quarter]['email_addr'], loginData[quarter]['sectionid'],loginData[quarter]['period']])
         # If we found special data, this is only run when you have a class that doesn't have grades entered, because MCPS won't assign a marking period to them when sending the json over
