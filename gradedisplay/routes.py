@@ -8,6 +8,9 @@ from flask import render_template, url_for, request, flash, redirect, make_respo
 from flask_session import Session
 # Import other useful stuff
 import requests, lxml.html, json, os, time, smtplib
+# Env vars
+from dotenv import load_dotenv
+load_dotenv()
 
 # Create an instance of a request object
 s = requests.session()
@@ -23,9 +26,9 @@ sess = Session()
 sess.init_app(app)
 
 # I could probably do this in a differnt way where I figure out if its summer based on the result from the sever, but I think that this is probably simpler, its just that I will have to manually edit it (only once a year tho)
-summer_break = False
+summer_break = eval(os.getenv('sb'))
 # Same with this, I think that I could figure out how to automate this, but im fine with having to manually edit it each quarter
-marking_period = 'MP2'
+marking_period = os.getenv('mp')
 
 # Load data function 
 def load_data(form):
@@ -300,7 +303,7 @@ def crashPage():
                 # Connect to the server
                 server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
                 # Login to gmail
-                server.login('mymcpsplusemailbot@gmail.com', 'password')
+                server.login('mymcpsplusemailbot@gmail.com', os.getenv('pw'))
                 # Send the message
                 server.sendmail('', ['gowdaanuragr@gmail.com'], 'Subject:Error\n\n'+info)
                 # Tell the user they sent the log successfully

@@ -90,7 +90,7 @@ function updateGrades(){
         });
         // Now we change a lot of variables, I wrote this like this because this peice of code is very simple and it wastes space writing it "neatly" so I just crammed it into one line
         // Anyway, what this line does is it sets the variables for the grade and the button color variables according to the percent the grade would be, keep in mind, we first check to see if colTwo equals 0 to aviod divison by 0 errors 
-        if (colTwo == 0){doPercent = false}else if (colOne/colTwo >= .795 && colOne/colTwo < .895){btn = 'info', grade = 'B'}else if (colOne/colTwo > .695 && colOne/colTwo < .895){btn = 'primary', grade = 'C'}else if (colOne/colTwo > .595 && colOne/colTwo < .895){btn = 'warning', grade = 'D'}else if (colOne/colTwo < .595){btn = 'danger', grade = 'E'}
+        if (colTwo == 0){doPercent = false}else if (colOne/colTwo >= .795 && colOne/colTwo < .895){btn = 'info', grade = 'B'}else if (colOne/colTwo >= .695 && colOne/colTwo < .795){btn = 'primary', grade = 'C'}else if (colOne/colTwo >= .595 && colOne/colTwo < .695){btn = 'warning', grade = 'D'}else if (colOne/colTwo < .595){btn = 'danger', grade = 'E'}
         // Just a quick ternary operator to condense simple code into fewer lines, what this code does is, simply put assign percent to the percent of the grade, if doPercent is false, meaning if colTwo equals 0, we assign it 100%
         doPercent?percent = String((colOne/colTwo*100).toFixed(1))+'%':percent = '100%'
         // Now, iterate through all the headers in the html
@@ -140,7 +140,7 @@ function updateTotalGrade(){
         // Set the button value to green/success again, this is the same process that we did before
         btn = 'success'
     // So again, we have this one liner which determines the grade and color of the button, it is only slightly different since we are sure that there is no diviosn by 0
-    if (gradeVal >= 79.5 && gradeVal < 89.5){btn = 'info', grade = 'B'}else if (gradeVal > 69.5 && gradeVal < 89.5){btn = 'primary', grade = 'C'}else if (gradeVal > 59.5 && gradeVal < 89.5){btn = 'warning', grade = 'D'}else if (gradeVal < 59.5){btn = 'danger', grade = 'E'}
+    if (gradeVal >= 79.5 && gradeVal < 89.5){btn = 'info', grade = 'B'}else if (gradeVal >= 69.5 && gradeVal < 79.5){btn = 'primary', grade = 'C'}else if (gradeVal >= 59.5 && gradeVal < 69.5){btn = 'warning', grade = 'D'}else if (gradeVal < 59.5){btn = 'danger', grade = 'E'}
     // Now we remove all the formatting classes on the button and then we make it a large button with the color and the text is the grade as well as the percent
     $('.btn-lg').removeClass().addClass('btn btn-lg btn-'+btn).text(grade+' - '+String(gradeVal.toFixed(1))+'%')
 }
@@ -158,7 +158,7 @@ $(document).on('change', '.col-sm input', function(){
         // Default to a
         grade = 'A'
     // Again, we have the long line thing
-    if (two == 0){doPercent = false}else if (one/two >= .795 && one/two < .895){btn = 'info', grade = 'B'}else if (one/two > .695 && one/two < .895){btn = 'primary', grade = 'C'}else if (one/two > .595 && one/two < .895){btn = 'warning', grade = 'D'}else if (one/two < .595){btn = 'danger', grade = 'E'}
+    if (two == 0){doPercent = false}else if (one/two >= .795 && one/two < .895){btn = 'info', grade = 'B'}else if (one/two >= .695 && one/two < .795){btn = 'primary', grade = 'C'}else if (one/two >= .595 && one/two < .695){btn = 'warning', grade = 'D'}else if (one/two < .595){btn = 'danger', grade = 'E'}
     // Quick ternary operator
     doPercent?percent = String((one/two*100).toFixed(1))+'%':percent = '100%'
     // Change everything
