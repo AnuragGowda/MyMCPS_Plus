@@ -246,7 +246,7 @@ def gradePage(classData):
         flash('You haven\'t logged in, please log in first', 'danger')
         # Redirect the user to the login page
         return redirect(url_for('getInfo'))
-    # If they are logged in however, then send them to the page with thte grade data of the class that they requestesd, we also "send" some information to our page here like how we did with the previous pages
+    # If they are logged in however, then send them to the page with the grade data of the class that they requestesd, we also "send" some information to our page here like how we did with the previous pages
     return render_template('gradePage.html', title = session.get('gradeData', '')[(int(classData)+1)*2-1][0], data = session.get('gradeData', '')[(int(classData)+1)*2], info = session.get('gradeData', '')[(int(classData)+1)*2-1])
 
 # Decorator that makes the following function handle the /about page on the website
@@ -282,7 +282,7 @@ def crashPage():
     # Check to see if a crash actually happend, its possible that the user just went to this page by typing in the url or they are trying to send multiple crash logs 
     if not session.get('crash', False) or session.get('sentCrash', False):
         # Tell them that they can't go here
-        flash('Either you are trying to access this page whitout a crash ocurring or you have already sent a crash message.', 'warning')
+        flash('Either you are trying to access this page without a crash ocurring or you have already sent a crash message.', 'warning')
         # Redirect them
         return redirect(url_for('getInfo')) if not session.get('login', False) else redirect(url_for('grades'))
     # Create an instance of the error form and feed it the error form on the page 
@@ -304,7 +304,7 @@ def crashPage():
                 # Send the message
                 server.sendmail('', ['gowdaanuragr@gmail.com'], 'Subject:Error\n\n'+info)
                 # Tell the user they sent the log successfully
-                flash('You successfully sent crash log! Thanks for helping out!', 'success')
+                flash('You successfully sent the crash log! Thanks for helping out!', 'success')
             # Catch it
             except Exception as e:
                 # If it fails, there isn't much I can do, so simply just skip over the exception
