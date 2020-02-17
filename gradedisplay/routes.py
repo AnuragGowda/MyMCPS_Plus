@@ -63,10 +63,10 @@ def load_data(form):
                 gradeInfo.append([basicInfo['courseName'], basicInfo['overallgrade'], float(basicInfo['percent']),basicInfo['teacher'],basicInfo['email_addr'], basicInfo['sectionid'], basicInfo['period']])
                 # Now that we have added that info to grade data, we also want to add the actual grades such as the grade categories (for example the formative category with a weight of 40) and the percent that the user has in each category
                 # We also get the individual grades, for example a 30/40 on a formative project or 10/10 on a homework, we save these both in our gradeInfo variable 
-                gradeInfo.append([s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CategoryDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid='+marking_period).json(),s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_AssignmentDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid=MP3').json()])
+                gradeInfo.append([s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_CategoryDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid='+marking_period).json(),s.get('https://portal.mcpsmd.org/guardian/prefs/assignmentGrade_AssignmentDetail.json?secid='+basicInfo['sectionid']+'&student_number='+form['account']+'&schoolid='+gradeInfo[0][0]+'&termid='+marking_period).json()])
             # However, we also want to keep track of unlisted marking periods because due to how  MyMCPS works, if a grade isnt entered for a class, there will be no marking period assigned to that class
             # If the class isnt included, it will cause our program to crash later, therefore it is necesary that we add the classes without grades, also we need to check that these aren't "fake classes" like counselor
-            elif loginData[quarter]['termid'] != marking_period and loginData[quarter]['courseName'] not in ['HOMEROOM', 'COUNSELOR', 'MYP RESEARCH SEM']:
+            elif loginData[quarter]['termid'] == '' and loginData[quarter]['courseName'] not in ['HOMEROOM', 'COUNSELOR', 'MYP RESEARCH SEM']:
                 # Add the course name, and everthing else, this is the same thing we did with the other data
                 specialData.append([loginData[quarter]['courseName'], '', '', loginData[quarter]['teacher'],loginData[quarter]['email_addr'], loginData[quarter]['sectionid'],loginData[quarter]['period']])
         # If we found special data, this is only run when you have a class that doesn't have grades entered, because MCPS won't assign a marking period to them when sending the json over
@@ -83,14 +83,24 @@ def load_data(form):
                 # then that class might need to be added, also I check to see if the class in gradeInfo isnt matching up with the period, for example, if the period I'm looking for is 1 (meaning period is 0 since I am interating through 
                 # a list that starts from 0 and goes to the last period), then I check to see if the period at the index that should correspond to 1 is in fact 1, and if it is not, then we need to proceed
                 if (period)*2+1 > len(gradeInfo)-2 or gradeInfo[(period)*2+1][6] != "0"+str(period+1):
+                    # Keep a boolean to see if we have found something to fill that periods location
+                    classFound = False
                     # Enumerate through all the special data 
                     for data in range(len(specialData)):
                         # If the data is the one that we are looking for (we got this from the if loop) then we will proceed
                         if specialData[data][6] == "0"+str(period+1):
+                            # Change bool
+                            classFound = True
                             # We want to then insert that data at the specific location, this is the class data, as I said before this includes things such as the course name, and everthing else
                             gradeInfo.insert(period*2+1, specialData[data]) 
                             # Since there are no grades, just put in a list with blank dictionaries to server sort of as a place holder 
                             gradeInfo.insert(period*2+2, [{},{}])
+                    # Apparently there can be classes that just don't exist on portal as well
+                    if not classFound:
+                        # Fill in class data with "missing"
+                        gradeInfo.insert(period*2+1, ['CLASS DATA MISSING','', '','UNKOWN TEACHER','UNKNOWN EMAIL','00000000','0'+str(period+1)])
+                        # Put in empty grade data
+                        gradeInfo.insert(period*2+2, [{},{}])
         # After everything, return the grade data 
         return gradeInfo
         # We now have all the grade data that we will need for the entire program, the format is as such:

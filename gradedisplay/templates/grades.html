@@ -16,9 +16,18 @@
                 <th scope="row">{{info+1}}</th>
                 <td>{{data[info][0]}}</td>
                 <td>{{data[info][3]}} <br> <small>{{data[info][4]}}</small></td>
+
+                <!--Changed stuff here because 100.0% makes it appear one line down, giving the impression of the website saying a grade of A- -->
+                {% if data[info][2] == 100.0 %}
+                    {% set hundred = True %}
+                {% else %}
+                    {% set hundred = False %}
+                {% endif %} 
                 {% if data[info][2] == '' %}
                     <td><button type="button" class="btn btn-secondary" disabled>N/A</button></td>
-                {% elif data[info][2] >= 89.5 %}
+                {% elif hundred %}
+                    <td><a href= "{{ url_for('gradePage', classData=info) }}"><button type="button" class="btn btn-success">{{data[info][1]}} - 100%</button></td></a>
+                {% elif data[info][2] >= 89.5%}
                     <td><a href= "{{ url_for('gradePage', classData=info) }}"><button type="button" class="btn btn-success">{{data[info][1]}} - {{data[info][2]}}%</button></td></a>
                 {% elif data[info][2] >= 79.5%}
                     <td><a href= "{{ url_for('gradePage', classData=info) }}"><button type="button" class="btn btn-info">{{data[info][1]}} - {{data[info][2]}}%</button></td></a>
